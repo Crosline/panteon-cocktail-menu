@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart' show GoogleSignInAccount;
-import 'package:panteon_cocktail_menu/google_options.dart';
+import 'package:panteon_cocktail_menu/options/google_options.dart';
 
 void main() {
   runApp(
@@ -68,8 +68,8 @@ class _SignInDemoState extends State<SignInDemo> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           ListTile(
-              leading: const CircleAvatar(
-
+              leading: CircleAvatar(
+                foregroundImage: Image.network(user.photoUrl!).image,
               ),
               title: Text(user.displayName ?? user.email.split("@")[0])
           ),
