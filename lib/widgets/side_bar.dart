@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:panteon_cocktail_menu/controllers/sign_in_controller.dart';
+import 'package:panteon_cocktail_menu/main.dart';
 
-class SideBar extends StatelessWidget {
+class SideBar extends StatefulWidget {
   static const EdgeInsets allPadding = EdgeInsets.all(20);
 
   static Builder getCustomLeading() => Builder(
@@ -12,8 +15,14 @@ class SideBar extends StatelessWidget {
         }
     );
 
-  const SideBar({super.key});
+  SideBar({super.key});
 
+
+  @override
+  State<SideBar> createState() => _SideBarState();
+}
+
+class _SideBarState extends State<SideBar> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -39,9 +48,22 @@ class SideBar extends StatelessWidget {
             const ListTile(
               title: Text("Item 2"),
             ),
-            const ListTile(
-              title: Text("Item 3"),
-            )
+            if(isAdmin)
+              const ListTile(
+                title: Text("Admin"),
+              ),
+            if(!isSignedIn)
+              ListTile(
+                title: ElevatedButton(onPressed: () {
+                  signInController.signIn();
+                }, child: Text("Sign In")),
+              )
+            else
+              ListTile(
+                title: ElevatedButton(onPressed: () {
+                  signInController.signOut();
+                }, child: Text("Sign Out")),
+              )
           ],
           ),
       ),
