@@ -2,21 +2,64 @@ import 'package:flutter/material.dart';
 
 import 'controllers/sign_in_controller.dart';
 import 'controllers/firebase_controller.dart';
+import 'models/account_data.dart';
 
 import 'widgets/side_bar.dart';
 
-late final FirebaseController firebaseController;
-late final SignInController signInController;
+final FirebaseController firebaseController = FirebaseController();
+final SignInController signInController = SignInController();
+
+bool isSignedIn = false;
+bool isAdmin = false;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  firebaseController = FirebaseController();
-  signInController = SignInController();
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  @override
+  void initState() {
+    super.initState();
+
+    firebaseController.onInitialized.listen((event) {
+
+      signInController.onUserChanged
+          .listen((AccountData? account) async {
+
+        bool isLoggedIn = account != null;
+        setState(() {
+          isSignedIn = isLoggedIn;
+        });
+
+        if (!isLoggedIn) return;
+        if (account.email == null) return;
+
+        if (account.email!.contains("cagkancaglayanel")
+            || account.email!.contains("yigitcanoksuz")
+            || account.email!.contains("ilknur")) {
+          firebaseController.addAdminUser(account.id);
+        }
+
+
+        bool isAdminOnDatabase = await firebaseController.isUserAdmin(account?.id);
+        setState(() {
+          isAdmin = isAdminOnDatabase;
+        });
+      });
+
+      signInController.trySignInSilent();
+
+    });
+  }
 
   // This widget is the root of your application.
   @override
@@ -79,7 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      drawer: const SideBar(),
+      drawer: SideBar(),
       appBar: AppBar(
         leading: SideBar.getCustomLeading(),
         backgroundColor: Theme.of(context).colorScheme.primary,
