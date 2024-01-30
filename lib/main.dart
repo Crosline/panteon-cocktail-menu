@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
+import 'controllers/sign_in_controller.dart';
+import 'controllers/firebase_controller.dart';
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  firebaseController = FirebaseController();
+  signInController = SignInController();
   runApp(const MyApp());
 }
 
