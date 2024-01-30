@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'controllers/sign_in_controller.dart';
 import 'controllers/firebase_controller.dart';
+
+late final FirebaseController firebaseController;
+late final SignInController signInController;
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   firebaseController = FirebaseController();
