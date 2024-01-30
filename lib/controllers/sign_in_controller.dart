@@ -1,11 +1,9 @@
 
 import 'dart:async';
 
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import '../options/firebase_options.dart';
 import '../options/google_options.dart';
 
 class SignInController {
@@ -27,6 +25,20 @@ class SignInController {
   SignInController() {
     googleSignInOptions = DefaultGoogleOptions.currentPlatform;
     _initialize();
+  }
+
+  void trySignInSilent() {
+    DefaultGoogleOptions.currentPlatform.signInSilently();
+  }
+
+  Future<void> signIn() async {
+    try {
+      await DefaultGoogleOptions.currentPlatform.signIn();
+    } catch (error) {
+      if (kDebugMode) {
+        print(error);
+      }
+    }
   }
 
   void _initialize() {
