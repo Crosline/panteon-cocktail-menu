@@ -42,6 +42,7 @@ class DefaultGoogleOptions {
         );
     }
   }
+  
 
   static final List<String> _scopes = <String>['email'];
 
