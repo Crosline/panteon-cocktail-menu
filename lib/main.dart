@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:panteon_cocktail_menu/models/bar_settings.dart';
 import 'package:panteon_cocktail_menu/pages/onboarding_page.dart';
 
 import 'controllers/sign_in_controller.dart';
@@ -8,6 +9,7 @@ import 'widgets/side_bar.dart';
 
 final FirebaseController firebaseController = FirebaseController();
 final SignInController signInController = SignInController();
+late BarSettings _barSettings;
 
 bool isAdmin = false;
 
@@ -72,8 +74,11 @@ class _MyHomePageState extends State<MyHomePage> {
       var account = signInController.currentUser;
       firebaseController.initialize().then((_) async {
         bool isAdminAWAIT = await firebaseController.isUserAdmin(account?.email);
+        BarSettings barSettings = await firebaseController.getBarSettings();
+
         setState(() {
           isAdmin = isAdminAWAIT;
+          _barSettings = barSettings;
         });
       });
     }

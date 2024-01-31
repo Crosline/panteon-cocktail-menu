@@ -16,7 +16,7 @@ class FirebaseController {
   late final FirebaseDatabase _database;
   late final DatabaseReference _adminsRef;
   late final DatabaseReference _barSettingsRef;
-  late final DatabaseReference _ordersRef;
+  // late final DatabaseReference _ordersRef;
 
   bool _isInitialized = false;
   bool get isInitialized {
@@ -108,7 +108,7 @@ class FirebaseController {
 
     _database = FirebaseDatabase.instance;
     _adminsRef = _database.ref("cbo_admins");
-    _ordersRef = _database.ref("cbo_orders");
+    // _ordersRef = _database.ref("cbo_orders");
     _barSettingsRef = _database.ref("cbo_bar_settings");
 
     if (useDatabaseEmulator) {
