@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:panteon_cocktail_menu/pages/onboarding_page.dart';
 
 import 'controllers/sign_in_controller.dart';
 import 'controllers/firebase_controller.dart';
-import 'models/account_data.dart';
 
 import 'widgets/side_bar.dart';
 
 final FirebaseController firebaseController = FirebaseController();
 final SignInController signInController = SignInController();
 
-bool isSignedIn = false;
 bool isAdmin = false;
 
 void main() {
@@ -25,42 +24,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
-  @override
-  void initState() {
-    super.initState();
-
-    firebaseController.onInitialized.listen((event) {
-
-      signInController.onUserChanged
-          .listen((AccountData? account) async {
-
-        bool isLoggedIn = account != null;
-        setState(() {
-          isSignedIn = isLoggedIn;
-        });
-
-        if (!isLoggedIn) return;
-        if (account.email == null) return;
-
-        if (account.email!.contains("cagkancaglayanel")
-            || account.email!.contains("yigitcanoksuz")
-            || account.email!.contains("ilknur")) {
-          firebaseController.addAdminUser(account.id);
-        }
-
-
-        bool isAdminOnDatabase = await firebaseController.isUserAdmin(account?.id);
-        setState(() {
-          isAdmin = isAdminOnDatabase;
-        });
-      });
-
-      signInController.trySignInSilent();
-
-    });
-  }
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -76,7 +39,7 @@ class _MyAppState extends State<MyApp> {
         ),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const OnboardingPage(),
     );
   }
 }
@@ -102,6 +65,25 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
+  @override
+  void initState() {
+
+    if (!firebaseController.isInitialized) {
+      var account = signInController.currentUser;
+      firebaseController.initialize().then((_) {
+        if (signInController.isAdminMail(account!)) {
+          firebaseController.addAdminUser(account.id);
+
+          setState(() {
+            isAdmin = true;
+          });
+        }
+      });
+    }
+
+    super.initState();
+  }
+
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -122,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      drawer: SideBar(),
+      drawer: const SideBar(),
       appBar: AppBar(
         leading: SideBar.getCustomLeading(),
         backgroundColor: Theme.of(context).colorScheme.primary,
