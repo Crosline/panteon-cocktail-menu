@@ -10,7 +10,7 @@ on: #trigger on push & PR to this branch only
 
 env:
   JAVA_VERSION: "12.x" #change this version if you want
-  FLUTTER_VERSION: "2.2.3" #set here your version
+  FLUTTER_VERSION: "3.2.6" #set here your version
   FLUTTER_CHANNEL: "stable" #set here your channel
 
 jobs:
@@ -22,7 +22,7 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: ${{env.JAVA_VERSION}}
-      - uses: subosito/flutter-action@v1
+      - uses: subosito/flutter-action@v2.12.0
         with:
           channel: ${{env.FLUTTER_CHANNEL}}
           flutter-version: ${{env.FLUTTER_VERSION}}
