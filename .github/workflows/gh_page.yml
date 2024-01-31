@@ -34,7 +34,6 @@ jobs:
           flutter clean 
           flutter pub get 
           flutter analyze 
-          flutter format lib/
   build_web:
     name: Build for WEB
     needs: [flutter_test] #only trigger this, if the flutter_test job runs ok...
