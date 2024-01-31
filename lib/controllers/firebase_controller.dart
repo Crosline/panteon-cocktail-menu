@@ -1,6 +1,5 @@
 
 import 'dart:async';
-import 'dart:html';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -9,12 +8,6 @@ import '../options/firebase_options.dart';
 
 class FirebaseController {
 
-  final StreamController _streamController =
-  StreamController.broadcast();
-  Stream get onInitialized {
-    return _streamController.stream;
-  }
-
   static const USE_DATABASE_EMULATOR = false;
   static const emulatorPort = 9000;
   final emulatorHost ='localhost';
@@ -22,12 +15,12 @@ class FirebaseController {
   late final FirebaseDatabase _database;
   late final DatabaseReference _admins;
 
-  late bool _initialized;
-
-  FirebaseController() {
-    _initialized = false;
-    _initialize();
+  bool _isInitialized = false;
+  bool get isInitialized {
+    return _isInitialized;
   }
+
+  FirebaseController() {  }
 
   Future<List<String>> _getAdminList() async {
     final adminSnapshot = await _admins.get();
@@ -47,7 +40,7 @@ class FirebaseController {
   }
 
   Future<bool> isUserAdmin(String? id) async {
-    if (!_initialized) return false;
+    if (!_isInitialized) return false;
     if (id == null) return false;
 
     try {
@@ -59,7 +52,7 @@ class FirebaseController {
   }
 
   Future<void> addAdminUser(String? id) async {
-    if (!_initialized) return;
+    if (!_isInitialized) return;
     if (id == null) return;
 
      var adminList = await _getAdminList();
@@ -71,7 +64,7 @@ class FirebaseController {
         .set(adminList);
   }
 
-  Future<void> _initialize() async {
+  Future<void> initialize() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
@@ -83,9 +76,6 @@ class FirebaseController {
       _database.useDatabaseEmulator(emulatorHost, emulatorPort);
     }
 
-    _initialized = true;
-    if (_streamController.hasListener) {
-      _streamController.add(null);
-    }
+    _isInitialized = true;
   }
 }
