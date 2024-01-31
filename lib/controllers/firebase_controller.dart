@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:panteon_cocktail_menu/models/bar_settings.dart';
 
 import '../options/firebase_options.dart';
 
@@ -13,7 +14,9 @@ class FirebaseController {
   final emulatorHost ='localhost';
 
   late final FirebaseDatabase _database;
-  late final DatabaseReference _admins;
+  late final DatabaseReference _adminsRef;
+  late final DatabaseReference _barSettingsRef;
+  late final DatabaseReference _ordersRef;
 
   bool _isInitialized = false;
   bool get isInitialized {
@@ -23,7 +26,7 @@ class FirebaseController {
   FirebaseController();
 
   Future<List<String>> _getAdminList() async {
-    final adminSnapshot = await _admins.get();
+    final adminSnapshot = await _adminsRef.get();
 
     if (adminSnapshot.value == null) {
       return <String>[];
@@ -60,7 +63,7 @@ class FirebaseController {
 
     adminList.add(email);
 
-    await _admins
+    await _adminsRef
         .set(adminList);
   }
 
@@ -73,8 +76,29 @@ class FirebaseController {
 
     adminList.remove(email);
 
-    await _admins
+    await _adminsRef
         .set(adminList);
+  }
+
+  Future<BarSettings> getBarSettings() async {
+    final barSnapshot = await _barSettingsRef.get();
+    BarSettings barSettings;
+
+    if (barSnapshot.value == null) {
+      barSettings = BarSettings.getDefaultSettings();
+      setBarSettings(barSettings);
+    }
+
+    var barSettingsMap = barSnapshot.value as Map<String, dynamic>;
+
+    barSettings = BarSettings.fromJson(barSettingsMap);
+
+    return barSettings;
+  }
+
+  Future<void> setBarSettings(BarSettings barSettings) async {
+    await _barSettingsRef
+        .set(barSettings.toJson());
   }
 
   Future<void> initialize() async {
@@ -83,7 +107,9 @@ class FirebaseController {
     );
 
     _database = FirebaseDatabase.instance;
-    _admins = _database.ref("cbo_admins");
+    _adminsRef = _database.ref("cbo_admins");
+    _ordersRef = _database.ref("cbo_orders");
+    _barSettingsRef = _database.ref("cbo_bar_settings");
 
     if (useDatabaseEmulator) {
       _database.useDatabaseEmulator(emulatorHost, emulatorPort);
