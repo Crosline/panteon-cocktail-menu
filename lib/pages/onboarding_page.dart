@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:panteon_cocktail_menu/controllers/navigation_controller.dart';
 
 import '../main.dart';
 import '../models/account_data.dart';
@@ -16,15 +17,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
   late bool _loading;
   late StreamSubscription<AccountData?> _onAccountChangeSubscription;
 
-  void _routeToHomePage() {
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute<void>(
-        builder: (BuildContext context) {
-          return const MyHomePage(title: "TestTitle");
-        },
-      ),
-    );
-  }
+  void _routeToHomePage() => NavigationController.push(context, const MyHomePage(title: "TestTitle"));
 
   @override
   void initState() {

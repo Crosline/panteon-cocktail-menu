@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:panteon_cocktail_menu/controllers/navigation_controller.dart';
 import 'package:panteon_cocktail_menu/main.dart';
 
 class AdminPage extends StatefulWidget {
@@ -8,7 +9,7 @@ class AdminPage extends StatefulWidget {
       builder: (BuildContext context) {
         return IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(), //() => SideBar.Open(context),
+          onPressed: () => NavigationController.pop(context), //() => SideBar.Open(context),
         );
       }
   );

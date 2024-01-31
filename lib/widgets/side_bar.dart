@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:panteon_cocktail_menu/controllers/navigation_controller.dart';
 import 'package:panteon_cocktail_menu/main.dart';
 import 'package:panteon_cocktail_menu/pages/admin_page.dart';
 import 'package:panteon_cocktail_menu/pages/onboarding_page.dart';
@@ -44,29 +45,14 @@ class SideBar extends StatelessWidget {
             if(isAdmin)
               ListTile(
                 title: const Text("Admin"),
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                      builder: (BuildContext context) {
-                        return const AdminPage();
-                      },
-                    ),
-                  );
-                },
+                onTap: () => NavigationController.push(context, const AdminPage()),
               ),
             const Divider(),
             ListTile(
               title: const Text("Sign Out"),
               onTap: () {
                 signInController.signOut();
-
-                Navigator.of(context).pushReplacement(
-                    MaterialPageRoute<void>(
-                      builder: (BuildContext context) {
-                        return const OnboardingPage();
-                      },
-                    )
-                );
+                NavigationController.replace(context, const OnboardingPage());
               },
             )
           ],
