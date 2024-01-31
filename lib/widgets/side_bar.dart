@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:panteon_cocktail_menu/controllers/sign_in_controller.dart';
 import 'package:panteon_cocktail_menu/main.dart';
+import 'package:panteon_cocktail_menu/pages/onboarding_page.dart';
 
-class SideBar extends StatefulWidget {
+class SideBar extends StatelessWidget {
   static const EdgeInsets allPadding = EdgeInsets.all(20);
 
   static Builder getCustomLeading() => Builder(
@@ -15,14 +14,8 @@ class SideBar extends StatefulWidget {
         }
     );
 
-  SideBar({super.key});
+  const SideBar({super.key});
 
-
-  @override
-  State<SideBar> createState() => _SideBarState();
-}
-
-class _SideBarState extends State<SideBar> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -35,35 +28,38 @@ class _SideBarState extends State<SideBar> {
               child: Column(
                 children: [
                   CircleAvatar(
-                    foregroundImage: Image.network("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQDGQ55_znshhGDlxv5sDZz96tD3hxPc5j8CVWMKvJcw&s").image,
+                    foregroundImage: Image.network(signInController.currentUser!.photoUrl!).image,
                   ),
                   const SizedBox(height: 20),
-                  const Text("username"),
+                  Text(signInController.currentUser!.displayName!),
+                  const Text("CBO"),
                 ],
               ),
             ),
-            const ListTile(
-              title: Text("Item 1"),
-            ),
-            const ListTile(
-              title: Text("Item 2"),
+            ListTile(
+              title: const Text("Cart"),
+              onTap: () { },
             ),
             if(isAdmin)
-              const ListTile(
-                title: Text("Admin"),
+              ListTile(
+                title: const Text("Admin"),
+                onTap: () { },
               ),
-            if(!isSignedIn)
-              ListTile(
-                title: ElevatedButton(onPressed: () {
-                  signInController.signIn();
-                }, child: Text("Sign In")),
-              )
-            else
-              ListTile(
-                title: ElevatedButton(onPressed: () {
-                  signInController.signOut();
-                }, child: Text("Sign Out")),
-              )
+            const Divider(),
+            ListTile(
+              title: const Text("Sign Out"),
+              onTap: () {
+                signInController.signOut();
+
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute<void>(
+                      builder: (BuildContext context) {
+                        return const OnboardingPage();
+                      },
+                    )
+                );
+              },
+            )
           ],
           ),
       ),
