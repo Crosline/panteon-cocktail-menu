@@ -60,7 +60,7 @@ jobs:
           channel: ${{env.FLUTTER_CHANNEL}}
       - run: |
           flutter pub get
-          flutter build web --release --base-href /your-project-name/
+          flutter build web --release --base-href /panteon-cocktail-menu/
           cd build/web
           git init
           git config --global user.email cagkancaglayanel@gmail.com #change to your e-mail
