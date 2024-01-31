@@ -72,8 +72,6 @@ class _MyHomePageState extends State<MyHomePage> {
       var account = signInController.currentUser;
       firebaseController.initialize().then((_) {
         if (signInController.isAdminMail(account!)) {
-          firebaseController.addAdminUser(account.id);
-
           setState(() {
             isAdmin = true;
           });
