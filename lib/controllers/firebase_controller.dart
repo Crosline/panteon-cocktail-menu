@@ -8,7 +8,7 @@ import '../options/firebase_options.dart';
 
 class FirebaseController {
 
-  static const USE_DATABASE_EMULATOR = false;
+  static const useDatabaseEmulator = false;
   static const emulatorPort = 9000;
   final emulatorHost ='localhost';
 
@@ -85,7 +85,7 @@ class FirebaseController {
     _database = FirebaseDatabase.instance;
     _admins = _database.ref("cbo_admins");
 
-    if (USE_DATABASE_EMULATOR) {
+    if (useDatabaseEmulator) {
       _database.useDatabaseEmulator(emulatorHost, emulatorPort);
     }
 

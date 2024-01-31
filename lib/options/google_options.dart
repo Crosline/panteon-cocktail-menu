@@ -43,7 +43,7 @@ class DefaultGoogleOptions {
     }
   }
 
-  static List<String> _scopes = <String>['email'];
+  static final List<String> _scopes = <String>['email'];
 
   static GoogleSignIn web = GoogleSignIn(
     clientId: '493444890503-59bm7un879ivunp903l3nj2jqivnsis6.apps.googleusercontent.com',

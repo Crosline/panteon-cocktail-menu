@@ -88,7 +88,7 @@ class SignInController {
   Future<void> _setAccountPrefs(AccountData? account) async {
     final SharedPreferences prefs = await _prefs;
 
-    if (account == null || account?.id == null) {
+    if (account == null || account.id == null) {
       prefs.remove("ptn_accountId");
       prefs.remove("ptn_accountEmail");
       prefs.remove("ptn_accountName");
