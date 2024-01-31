@@ -9,7 +9,7 @@ import 'widgets/side_bar.dart';
 
 final FirebaseController firebaseController = FirebaseController();
 final SignInController signInController = SignInController();
-late BarSettings _barSettings;
+late BarSettings barSettings;
 
 bool isAdmin = false;
 
@@ -78,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
         setState(() {
           isAdmin = isAdminAWAIT;
-          _barSettings = barSettings;
+          barSettings = barSettings;
         });
       });
     }
