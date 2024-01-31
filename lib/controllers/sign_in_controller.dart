@@ -102,12 +102,6 @@ class SignInController {
     prefs.setString("ptn_accountPhotoURI", account.photoUrl!);
   }
 
-  bool isAdminMail(AccountData account) {
-    return account.email!.contains("cagkancaglayanel")
-        || account.email!.contains("yigitcanoksuz")
-        || account.email!.contains("ilknur");
-  }
-
   void signOut() {
     googleSignInOptions.signOut();
     _setAccountPrefs(null);

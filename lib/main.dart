@@ -70,14 +70,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
     if (!firebaseController.isInitialized) {
       var account = signInController.currentUser;
-      firebaseController.initialize().then((_) {
-        if (signInController.isAdminMail(account!)) {
-          firebaseController.addAdminUser(account.id);
-
-          setState(() {
-            isAdmin = true;
-          });
-        }
+      firebaseController.initialize().then((_) async {
+        bool isAdminAWAIT = await firebaseController.isUserAdmin(account?.email);
+        setState(() {
+          isAdmin = isAdminAWAIT;
+        });
       });
     }
 

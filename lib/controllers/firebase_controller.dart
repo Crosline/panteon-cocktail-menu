@@ -20,7 +20,7 @@ class FirebaseController {
     return _isInitialized;
   }
 
-  FirebaseController() {  }
+  FirebaseController();
 
   Future<List<String>> _getAdminList() async {
     final adminSnapshot = await _admins.get();
@@ -39,26 +39,39 @@ class FirebaseController {
     return adminList;
   }
 
-  Future<bool> isUserAdmin(String? id) async {
+  Future<bool> isUserAdmin(String? email) async {
     if (!_isInitialized) return false;
-    if (id == null) return false;
+    if (email == null) return false;
 
     try {
       var adminList = await _getAdminList();
-      return adminList.contains(id);
+      return adminList.contains(email);
     } catch (err) {
       return false;
     }
   }
 
-  Future<void> addAdminUser(String? id) async {
+  Future<void> addAdminUser(String? email) async {
     if (!_isInitialized) return;
-    if (id == null) return;
+    if (email == null) return;
 
      var adminList = await _getAdminList();
-    if (adminList.contains("id")) return;
+    if (adminList.contains(email)) return;
 
-    adminList.add(id);
+    adminList.add(email);
+
+    await _admins
+        .set(adminList);
+  }
+
+  Future<void> removeAdminUser(String? email) async {
+    if (!_isInitialized) return;
+    if (email == null) return;
+
+    var adminList = await _getAdminList();
+    if (!adminList.contains(email)) return;
+
+    adminList.remove(email);
 
     await _admins
         .set(adminList);
