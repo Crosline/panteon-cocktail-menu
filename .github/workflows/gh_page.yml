@@ -13,37 +13,30 @@ env:
   FLUTTER_CHANNEL: "stable" #set here your channel
 
 jobs:
-  flutter_test:
+  check_and_publish:
     if: "contains(github.event.head_commit.message, '[deploy]')"
     name: Analyze
     runs-on: ubuntu-latest #change it to another OS if you want
     steps:
-      - uses: actions/checkout@v4
-      - uses: subosito/flutter-action@v2.12.0
+      - name: "Checkout Project"
+        uses: actions/checkout@v4
+      - name: "Get Flutter"
+        uses: subosito/flutter-action@v2.12.0
         with:
           channel: ${{env.FLUTTER_CHANNEL}}
           flutter-version: ${{env.FLUTTER_VERSION}}
-          #1 - get depencies
-          #2 - check if there are some warnings
-          #3 - format all files at lib folder
-      - run: |
+      - name: "Flutter Dependencies"
+        run: |
           flutter clean 
           flutter pub get 
-          flutter analyze 
-  publish_ghPages:
-    name: Publish GH Pages
-    needs: [flutter_test] #only trigger this, if the test job runs ok...
-    env:
-      my_secret: ${{secrets.commit_secret}}
-    runs-on: ubuntu-latest #change it to another OS if you want
-    steps:
-      - uses: actions/checkout@v4
-      - uses: subosito/flutter-action@v2.12.0
-        with:
-          channel: ${{env.FLUTTER_CHANNEL}}
-      - run: |
-          flutter pub get
+      - name: "Flutter Analyze"
+        run: |
+          flutter analyze
+      - name: "Flutter Web Build"
+        run: |
           flutter build web --release --base-href /panteon-cocktail-menu/
+      - name: "Publish"
+        run: |
           cd build/web
           git init
           git config --global user.email cagkancaglayanel@gmail.com #change to your e-mail
