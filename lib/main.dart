@@ -47,7 +47,7 @@ class _MyAppState extends State<MyApp> {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  MyHomePage({super.key});
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -58,7 +58,7 @@ class MyHomePage extends StatefulWidget {
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
 
-  final String title;
+  String title = "Menu";
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -74,11 +74,12 @@ class _MyHomePageState extends State<MyHomePage> {
       var account = signInController.currentUser;
       firebaseController.initialize().then((_) async {
         bool isAdminAWAIT = await firebaseController.isUserAdmin(account?.email);
-        BarSettings barSettings = await firebaseController.getBarSettings();
+        BarSettings barSettingsAWAIT = await firebaseController.getBarSettings();
 
         setState(() {
           isAdmin = isAdminAWAIT;
-          barSettings = barSettings;
+          barSettings = barSettingsAWAIT;
+          widget.title = barSettings.title;
         });
       });
     }
