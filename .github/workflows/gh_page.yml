@@ -14,7 +14,7 @@ env:
 
 jobs:
   check_and_publish:
-    if: "contains(github.event.head_commit.message, '[deploy]')"
+    if: "contains(github.event.head_commit.message, '[deploy]') || contains(github.event.head_commit.message, '[ci]')"
     name: Check and Publish
     runs-on: ubuntu-latest #change it to another OS if you want
     steps:
@@ -34,7 +34,7 @@ jobs:
           flutter analyze
       - name: "Flutter Web Build"
         run: |
-          flutter build web --release --base-href /panteon-cocktail-menu/
+          flutter build web --release --base-href /panteon-cocktail-menu/ --web-renderer html
       - name: "Publish"
         run: |
           cd build/web
