@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:panteon_cocktail_menu/utils/validator.dart';
 
 import '../../main.dart';
 import '../loading_widget.dart';
@@ -44,9 +45,6 @@ class _AdminSettingsWidgetState extends LoadingWidgetState<AdminSettingsWidget> 
     }
   }
 
-  String? _validate(String? value) {
-  }
-
   @override
   Widget build(BuildContext context) {
     return buildLoading(
@@ -59,7 +57,7 @@ class _AdminSettingsWidgetState extends LoadingWidgetState<AdminSettingsWidget> 
               labelText: "CBO Email",
             ),
             onChanged: _setAdminToUpdate,
-            validator: _validate,
+            validator: Validator.stringValidator,
           ),
           const SizedBox(height: 20),
           Row(

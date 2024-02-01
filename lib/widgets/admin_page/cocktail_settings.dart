@@ -3,7 +3,6 @@ import 'package:panteon_cocktail_menu/widgets/loading_widget.dart';
 import 'package:panteon_cocktail_menu/widgets/sized_divider.dart';
 
 import '../../main.dart';
-import '../../models/bar_settings.dart';
 import '../../models/cocktail.dart';
 import '../../utils/validator.dart';
 
@@ -115,7 +114,7 @@ class _CocktailSettingsWidgetState extends LoadingWidgetState<CocktailSettingsWi
             const SizedBox(height: 20),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                fixedSize: const Size(120, 20),
+                fixedSize: const Size(200, 20),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),
                 ),
@@ -123,6 +122,7 @@ class _CocktailSettingsWidgetState extends LoadingWidgetState<CocktailSettingsWi
               onPressed: _addCocktail,
               child: const Text('Add New Cocktail'),
             ),
+            const SizedBox(height: 20),
           ],
         )
     );

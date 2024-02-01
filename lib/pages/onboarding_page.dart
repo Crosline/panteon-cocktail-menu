@@ -17,7 +17,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
   late bool _loading;
   late StreamSubscription<AccountData?> _onAccountChangeSubscription;
 
-  void _routeToHomePage() => NavigationController.push(context, MyHomePage());
+  void _routeToHomePage() => NavigationController.push(context, const MyHomePage());
 
   @override
   void initState() {

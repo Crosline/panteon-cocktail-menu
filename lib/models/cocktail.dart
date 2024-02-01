@@ -33,14 +33,4 @@ class Cocktail {
     return fromJsonMap(map);
   }
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-          other is Cocktail &&
-              runtimeType == other.runtimeType &&
-              name == other.name;
-
-  @override
-  int get hashCode => super.hashCode;
-
 }
