@@ -13,12 +13,11 @@ class AdminSettingsWidget extends StatefulWidget {
 
 class _AdminSettingsWidgetState extends LoadingWidgetState<AdminSettingsWidget> {
   String? _adminToUpdate;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
-    setState(() {
-      isLoading = false;
-    });
+    isLoading = false;
     super.initState();
   }
   void _setAdminToUpdate(String? value) {
@@ -26,21 +25,19 @@ class _AdminSettingsWidgetState extends LoadingWidgetState<AdminSettingsWidget> 
   }
 
   void _updateAdmin(bool isAdd) {
-    setState(() {
-      isLoading = true;
-    });
+    if (!_formKey.currentState!.validate()) return;
+
+    if (_adminToUpdate == signInController.currentUser!.email) return;
+
+    isLoading = true;
 
     if (isAdd) {
       firebaseController.addAdminUser(_adminToUpdate).then((value) => {
-        setState(() {
-          isLoading = false;
-        })
+        isLoading = false
       });
     } else {
       firebaseController.removeAdminUser(_adminToUpdate).then((value) => {
-        setState(() {
-          isLoading = false;
-        })
+        isLoading = false
       });
     }
   }
@@ -50,14 +47,17 @@ class _AdminSettingsWidgetState extends LoadingWidgetState<AdminSettingsWidget> 
     return buildLoading(
       Column(
         children: [
-          TextFormField(
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              hintText: 'example@panteon.games',
-              labelText: "CBO Email",
+          Form(
+            key: _formKey,
+            child: TextFormField(
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: 'example@panteon.games',
+                labelText: "CBO Email",
+              ),
+              onChanged: _setAdminToUpdate,
+              validator: Validator.stringValidator,
             ),
-            onChanged: _setAdminToUpdate,
-            validator: Validator.stringValidator,
           ),
           const SizedBox(height: 20),
           Row(

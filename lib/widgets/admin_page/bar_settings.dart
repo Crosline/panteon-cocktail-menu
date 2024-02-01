@@ -14,28 +14,24 @@ class BarSettingsWidget extends StatefulWidget {
 
 class _BarSettingsWidgetState extends LoadingWidgetState<BarSettingsWidget> {
   late BarSettings barSettings = BarSettings.getDefaultSettings();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     firebaseController.getBarSettings().then((newBarSettings) {
       barSettings = newBarSettings;
-      // setState(() {
-        isLoading = false;
-      // });
+      isLoading = false;
     });
 
     super.initState();
   }
 
   void _submit() {
-    // setState(() {
-      isLoading = true;
-    // });
+    if (!_formKey.currentState!.validate()) return;
+    isLoading = true;
 
     firebaseController.setBarSettings(barSettings).then((newBarSettings) {
-      // setState(() {
-        isLoading = false;
-      // });
+      isLoading = false;
     });
   }
 
@@ -52,15 +48,18 @@ class _BarSettingsWidgetState extends LoadingWidgetState<BarSettingsWidget> {
             ),
           ),
           const SizedBox(height: 20),
-          TextFormField(
-            initialValue: barSettings.title,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              hintText: 'Panteon CBO Cocktail',
-              labelText: "Bar Name",
+          Form(
+            key: _formKey,
+            child: TextFormField(
+              initialValue: barSettings.title,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: 'Panteon CBO Cocktail',
+                labelText: "Bar Name",
+              ),
+              onChanged: (value) { barSettings.title = value; },
+              validator: Validator.stringValidator,
             ),
-            onChanged: (value) { barSettings.title = value; },
-            validator: Validator.stringValidator,
           ),
           const SizedBox(height: 20),
           Row(

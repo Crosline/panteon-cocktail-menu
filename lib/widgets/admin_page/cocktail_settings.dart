@@ -15,6 +15,7 @@ class CocktailSettingsWidget extends StatefulWidget {
 
 class _CocktailSettingsWidgetState extends LoadingWidgetState<CocktailSettingsWidget> {
   Map<String, dynamic> _cocktailMap = <String, dynamic>{};
+  final _formKey = GlobalKey<FormState>();
 
   Cocktail? _selectedCocktail;
   String? _newCocktailName;
@@ -102,14 +103,17 @@ class _CocktailSettingsWidgetState extends LoadingWidgetState<CocktailSettingsWi
               ),
 
             const SizedDivider(vertical: 20),
-            TextFormField(
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Bedroom Ecstasy',
-                labelText: "New Cocktail Name",
+            Form(
+              key: _formKey,
+              child: TextFormField(
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Bedroom Ecstasy',
+                  labelText: "New Cocktail Name",
+                ),
+                onChanged: (value) { _newCocktailName = value; },
+                validator: Validator.stringValidator,
               ),
-              onChanged: (value) { _newCocktailName = value; },
-              validator: Validator.stringValidator,
             ),
             const SizedBox(height: 20),
             ElevatedButton(
@@ -135,6 +139,7 @@ class _CocktailSettingsWidgetState extends LoadingWidgetState<CocktailSettingsWi
   }
 
   void _addCocktail() {
+    if (!_formKey.currentState!.validate()) return;
     if (_newCocktailName == null) return;
 
     var newCocktail = Cocktail(name: _newCocktailName!, description: "description", price: "price");
@@ -168,9 +173,7 @@ class _CocktailSettingsWidgetState extends LoadingWidgetState<CocktailSettingsWi
         _selectedCocktail = Cocktail.fromJsonMap(cocktailMap[firstCocktail]);
       }
 
-      // setState(() {
-        isLoading = false;
-      // });
+      isLoading = false;
     });
   }
 }
