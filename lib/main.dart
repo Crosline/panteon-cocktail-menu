@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:panteon_cocktail_menu/models/bar_settings.dart';
 import 'package:panteon_cocktail_menu/pages/onboarding_page.dart';
 
-import 'controllers/sign_in_controller.dart';
 import 'controllers/firebase_controller.dart';
+import 'controllers/sign_in_controller.dart';
 
 import 'widgets/side_bar.dart';
 
