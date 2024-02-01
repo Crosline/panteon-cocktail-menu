@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:panteon_cocktail_menu/controllers/navigation_controller.dart';
 import 'package:panteon_cocktail_menu/main.dart';
 
+import '../models/cocktail.dart';
+
 class AdminPage extends StatefulWidget {
   const AdminPage({super.key});
 
@@ -22,16 +24,40 @@ class _AdminPageState extends State<AdminPage> {
   bool _isLoading = true;
   late String? _adminToUpdate;
 
+  Cocktail? _selectedCocktail;
+  String? _newCocktailName = "";
+  Map<String, dynamic> _cocktailMap = <String, dynamic>{};
+
   @override
   void initState() {
     firebaseController.getBarSettings().then((newBarSettings) {
       barSettings = newBarSettings;
+
+      _updateCocktailMap();
+
+    });
+
+    super.initState();
+  }
+
+  void _startLoading() {
+    setState(() {
+      _isLoading = true;
+    });
+  }
+  void _updateCocktailMap() {
+    firebaseController.getCocktailMap().then((cocktailMap) {
+      _cocktailMap = cocktailMap;
+
+      String? firstCocktail = cocktailMap.keys.firstOrNull;
+      if (firstCocktail != null) {
+        _selectedCocktail = Cocktail.fromJsonMap(cocktailMap[firstCocktail]);
+      }
+
       setState(() {
         _isLoading = false;
       });
     });
-
-    super.initState();
   }
 
   String? _validate(String? value) {
@@ -42,9 +68,7 @@ class _AdminPageState extends State<AdminPage> {
   }
 
   void _submit() {
-    setState(() {
-      _isLoading = true;
-    });
+    _startLoading();
 
     firebaseController.setBarSettings(barSettings).then((value) {
       setState(() {
@@ -54,9 +78,7 @@ class _AdminPageState extends State<AdminPage> {
   }
 
   void _updateAdmin(bool isAdd) {
-    setState(() {
-      _isLoading = true;
-    });
+    _startLoading();
 
     if (isAdd) {
       firebaseController.addAdminUser(_adminToUpdate).then((value) => {
@@ -86,7 +108,7 @@ class _AdminPageState extends State<AdminPage> {
             ),
             body: Padding(
               padding: const EdgeInsets.all(20.0),
-              child: Column(
+              child: ListView(
                 children: [
                   const Text(
                     'Admin Settings',
@@ -169,7 +191,94 @@ class _AdminPageState extends State<AdminPage> {
                         child: const Text('Remove'),
                       ),
                     ],
-                  )
+                  ),
+                  const SizedBox(height: 20),
+                  const Divider(),
+                  const SizedBox(height: 20),
+                  if (_selectedCocktail != null)
+                    Column(
+                      children: [
+                        DropdownMenu(
+                          initialSelection: _selectedCocktail!.name,
+                          onSelected: _onCocktailSelected,
+                          dropdownMenuEntries: _cocktailMap.keys.map<DropdownMenuEntry<String>>((String value) {
+                            return DropdownMenuEntry(value: value, label: value);
+                          }).toList(),
+                        ),
+                        const SizedBox(height: 20),
+                        TextFormField(
+                          initialValue: _selectedCocktail!.description,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: 'acinin tatli tebessumu',
+                            labelText: "Description",
+                          ),
+                          onChanged: (value) { _selectedCocktail!.description = value; },
+                          validator: _validate,
+                        ),
+                        const SizedBox(height: 20),
+                        TextFormField(
+                          initialValue: _selectedCocktail!.price,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: 'acinin tatli tebessumu',
+                            labelText: "Price",
+                          ),
+                          onChanged: (value) { _selectedCocktail!.price = value; },
+                          validator: _validate,
+                        ),
+                        const SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                fixedSize: const Size(150, 30),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                              ),
+                              onPressed: _updateCocktail,
+                              child: const Text('Update'),
+                            ),
+                            const SizedBox(width: 80),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                fixedSize: const Size(90, 30),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                              ),
+                              onPressed: _removeCocktail,
+                              child: const Text('Remove'),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  const SizedBox(height: 20),
+                  const Divider(),
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Bedroom Ecstasy',
+                      labelText: "New Cocktail Name",
+                    ),
+                    onChanged: (value) { _newCocktailName = value; },
+                    validator: _validate,
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      fixedSize: const Size(120, 20),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                    onPressed: _addNewCocktail,
+                    child: const Text('Add New Cocktail'),
+                  ),
                 ],
               ),
             ),
@@ -178,4 +287,41 @@ class _AdminPageState extends State<AdminPage> {
     }
   }
 
+
+  void _updateCocktail() {
+    if (_selectedCocktail == null) return;
+    _startLoading();
+
+    firebaseController.setCocktail(_selectedCocktail!).then((value) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
+  }
+
+  void _onCocktailSelected(String? value) {
+    var currentCocktail = _cocktailMap[value] as Cocktail;
+
+    setState(() {
+      _selectedCocktail = currentCocktail;
+    });
+  }
+
+  void _addNewCocktail() {
+    var newCocktail = Cocktail(name: _newCocktailName!, description: "desc", price: "mangir");
+    _startLoading();
+    firebaseController.setCocktail(newCocktail).then((value) {
+      firebaseController.getCocktailMap().then((cocktailMap) {
+        _updateCocktailMap();
+      });
+    });
+  }
+
+  void _removeCocktail() {
+    _startLoading();
+    firebaseController.removeCocktail(_selectedCocktail!).then((value) {
+
+      _updateCocktailMap();
+    });
+  }
 }

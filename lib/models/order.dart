@@ -31,7 +31,7 @@ class Order {
     Map<Cocktail, int> cocktailMap = <Cocktail, int>{};
     if (cocktails == null) return cocktailMap;
 
-    for (Map<String, dynamic> cocktail in cocktails.keys) {
+    for (String cocktail in cocktails.keys) {
       cocktailMap[Cocktail.fromJson(cocktail)] = cocktails[cocktail];
     }
 

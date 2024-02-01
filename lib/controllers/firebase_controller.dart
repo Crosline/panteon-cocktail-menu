@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:panteon_cocktail_menu/models/bar_settings.dart';
+import 'package:panteon_cocktail_menu/models/cocktail.dart';
 
+import '../models/order.dart';
 import '../options/firebase_options.dart';
 
 class FirebaseController {
@@ -15,7 +17,8 @@ class FirebaseController {
   late final FirebaseDatabase _database;
   late final DatabaseReference _adminsRef;
   late final DatabaseReference _barSettingsRef;
-  // late final DatabaseReference _ordersRef;
+  late final DatabaseReference _ordersRef;
+  late final DatabaseReference _cocktailDbRef;
 
   bool _isInitialized = false;
   bool get isInitialized {
@@ -100,6 +103,61 @@ class FirebaseController {
         .set(barSettings.toJson());
   }
 
+  Future<void> setCocktail(Cocktail cocktail) async {
+    Map<String, dynamic> cocktailMap = await getCocktailMap();
+
+    cocktailMap[cocktail.name] = cocktail.toJsonMap();
+
+    await _cocktailDbRef
+        .set(cocktailMap);
+  }
+
+  Future<void> removeCocktail(Cocktail cocktail) async {
+    Map<String, dynamic> cocktailMap = await getCocktailMap();
+
+    if (cocktailMap.containsKey(cocktail.name)) {
+      cocktailMap.remove(cocktail.name);
+    }
+
+    await _cocktailDbRef
+        .set(cocktailMap);
+  }
+
+  Future<Map<String, dynamic>> getCocktailMap() async {
+    var cocktailDbSnapshot = await _cocktailDbRef
+        .get();
+
+    Map<String, dynamic> cocktailMap;
+    if (cocktailDbSnapshot.value == null) {
+      cocktailMap = <String, dynamic>{};
+    } else {
+      cocktailMap = cocktailDbSnapshot.value as Map<String, dynamic>;
+    }
+
+    return cocktailMap;
+  }
+
+  Future<void> addNewOrder(Order order) async {
+    await _ordersRef
+        .push()
+        .set(order.toJson());
+  }
+
+  Future<List<Order>> getAllOrders() async {
+    List<Order> orders = <Order>[];
+    final orderSnapshot = await _ordersRef.get();
+
+    if (orderSnapshot.value == null) return orders;
+
+    var ordersMap = orderSnapshot.value as Map<String, dynamic>;
+
+    for (Map<String, dynamic> orderInstance in ordersMap.values) {
+      orders.add(Order.fromJson(orderInstance));
+    }
+
+    return orders;
+  }
+
   Future<void> initialize() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
@@ -107,8 +165,9 @@ class FirebaseController {
 
     _database = FirebaseDatabase.instance;
     _adminsRef = _database.ref("cbo_admins");
-    // _ordersRef = _database.ref("cbo_orders");
+    _ordersRef = _database.ref("cbo_orders");
     _barSettingsRef = _database.ref("cbo_bar_settings");
+    _cocktailDbRef = _database.ref("cbo_cocktails");
 
     if (useDatabaseEmulator) {
       _database.useDatabaseEmulator(emulatorHost, emulatorPort);
