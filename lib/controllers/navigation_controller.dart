@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 class NavigationController {
-  static push(BuildContext context, Widget widget) {
+  static push(BuildContext context, Widget widget, {int durationMs = 300}) {
     Navigator.of(context).push(
-      MaterialPageRoute<void>(
+      MyRoute(
         builder: (BuildContext context) {
           return widget;
         },
+        transitionDuration: durationMs,
       ),
     );
   }
@@ -15,13 +16,25 @@ class NavigationController {
     Navigator.of(context).pop();
   }
 
-  static replace(BuildContext context, Widget widget) {
+  static replace(BuildContext context, Widget widget, {int durationMs = 300}) {
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute<void>(
+      MyRoute(
         builder: (BuildContext context) {
           return widget;
         },
+        transitionDuration: durationMs,
       ),
     );
   }
+}
+
+class MyRoute extends MaterialPageRoute<void> {
+  late int _transitionDuration;
+
+  MyRoute({required WidgetBuilder builder, transitionDuration = 300}) : super(builder: builder) {
+    _transitionDuration = transitionDuration;
+  }
+
+  @override
+  Duration get transitionDuration => Duration(milliseconds: _transitionDuration);
 }
