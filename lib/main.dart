@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:panteon_cocktail_menu/models/bar_settings.dart';
 import 'package:panteon_cocktail_menu/pages/onboarding_page.dart';
+import 'package:panteon_cocktail_menu/widgets/menu_widget.dart';
 
 import 'controllers/firebase_controller.dart';
 import 'controllers/sign_in_controller.dart';
@@ -33,12 +34,11 @@ class _MyAppState extends State<MyApp> {
       title: 'Panteon Cocktail',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.red,
-          brightness: Brightness.light,
-          // overrides
-          primary: Colors.blue,
-          secondary: Colors.green
-        ),
+            seedColor: Colors.red,
+            brightness: Brightness.light,
+            // overrides
+            primary: Colors.blue,
+            secondary: Colors.green),
         useMaterial3: true,
       ),
       home: const OnboardingPage(),
@@ -61,45 +61,18 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class MenuWidget extends StatelessWidget {
-  const MenuWidget({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        children: <Widget>[
-          const Text('Menu'),
-          Expanded(
-            child: GridView.count(
-              crossAxisCount: 2,
-              scrollDirection: Axis.vertical,
-              children: List.generate(5, (index) {
-                return ProductCard(
-                  title: 'Product $index',
-                  price: '\$10',
-                  image: 'assets/images/cocktail.jpg',
-                );
-              }),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class _MyHomePageState extends State<MyHomePage> {
   String title = "Menu";
-  int _counter = 0;
 
   @override
   void initState() {
-
     if (!firebaseController.isInitialized) {
       var account = signInController.currentUser;
       firebaseController.initialize().then((_) async {
-        bool isAdminAWAIT = await firebaseController.isUserAdmin(account?.email);
-        BarSettings barSettingsAWAIT = await firebaseController.getBarSettings();
+        bool isAdminAWAIT =
+            await firebaseController.isUserAdmin(account?.email);
+        BarSettings barSettingsAWAIT =
+            await firebaseController.getBarSettings();
 
         setState(() {
           isAdmin = isAdminAWAIT;
@@ -110,17 +83,6 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     super.initState();
-  }
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
   }
 
   @override
