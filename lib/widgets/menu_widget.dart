@@ -8,7 +8,8 @@ class MenuWidget extends StatelessWidget {
     return Center(
       child: Column(
         children: <Widget>[
-          const Text('Menu'),
+          Text('Menu', 
+          style: Theme.of(context).textTheme.headlineLarge),
           Expanded(
             child: GridView.count(
               padding: const EdgeInsets.all(20),
@@ -17,7 +18,6 @@ class MenuWidget extends StatelessWidget {
               children: List.generate(5, (index) {
                 return ProductCard(
                   title: 'Product $index',
-                  price: '\$10',
                   image: 'assets/images/panteon.png',
                 );
               }),
