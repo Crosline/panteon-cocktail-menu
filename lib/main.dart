@@ -34,11 +34,8 @@ class _MyAppState extends State<MyApp> {
       title: 'Panteon Cocktail',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.red,
-            brightness: Brightness.light,
-            // overrides
-            primary: Colors.blue,
-            secondary: Colors.green),
+            seedColor: const Color.fromARGB(255, 138, 77, 244),
+            brightness: Brightness.dark),
         useMaterial3: true,
       ),
       home: const OnboardingPage(),

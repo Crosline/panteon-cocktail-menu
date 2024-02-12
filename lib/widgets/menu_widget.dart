@@ -11,13 +11,14 @@ class MenuWidget extends StatelessWidget {
           const Text('Menu'),
           Expanded(
             child: GridView.count(
+              padding: const EdgeInsets.all(20),
               crossAxisCount: 2,
               scrollDirection: Axis.vertical,
               children: List.generate(5, (index) {
                 return ProductCard(
                   title: 'Product $index',
                   price: '\$10',
-                  image: 'assets/images/cocktail.jpg',
+                  image: 'assets/images/panteon.png',
                 );
               }),
             ),
