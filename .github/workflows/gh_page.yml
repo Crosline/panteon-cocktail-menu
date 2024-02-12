@@ -1,0 +1,49 @@
+name: deploy
+
+on: #trigger on push & PR to this branch only
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  FLUTTER_VERSION: "3.16.9" #set here your version
+  FLUTTER_CHANNEL: "stable" #set here your channel
+
+jobs:
+  check_and_publish:
+    if: "contains(github.event.head_commit.message, '[deploy]') || contains(github.event.head_commit.message, '[ci]')"
+    name: Check and Publish
+    runs-on: ubuntu-latest #change it to another OS if you want
+    steps:
+      - name: "Checkout Project"
+        uses: actions/checkout@v4
+      - name: "Get Flutter"
+        uses: subosito/flutter-action@v2.12.0
+        with:
+          channel: ${{env.FLUTTER_CHANNEL}}
+          flutter-version: ${{env.FLUTTER_VERSION}}
+      - name: "Flutter Dependencies"
+        run: |
+          flutter clean 
+          flutter pub get 
+      - name: "Flutter Analyze"
+        run: |
+          flutter analyze
+      - name: "Flutter Web Build"
+        run: |
+          flutter build web --release --base-href /panteon-cocktail-menu/ --web-renderer html
+      - name: "Publish"
+        run: |
+          cd build/web
+          git init
+          git config --global user.email cagkancaglayanel@gmail.com #change to your e-mail
+          git config --global user.name Crosline #change to your user-name
+          git status
+          git remote add origin https://${{secrets.commit_secret}}@github.com/Crosline/panteon-cocktail-menu.git
+          git checkout -b gh-pages
+          git add --all
+          git commit -m "update"
+          git push origin gh-pages -f

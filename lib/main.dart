@@ -1,45 +1,54 @@
 import 'package:flutter/material.dart';
-import 'package:panteon_cocktail_menu/widgets/product-card.dart';
+import 'package:panteon_cocktail_menu/models/bar_settings.dart';
+import 'package:panteon_cocktail_menu/pages/onboarding_page.dart';
+
+import 'controllers/firebase_controller.dart';
+import 'controllers/sign_in_controller.dart';
+
+import 'widgets/side_bar.dart';
+
+final FirebaseController firebaseController = FirebaseController();
+final SignInController signInController = SignInController();
+late BarSettings barSettings;
+
+bool isAdmin = false;
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Panteon Bar',
+      title: 'Panteon Cocktail',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme:
-            ColorScheme.fromSeed(seedColor: Color.fromARGB(81, 222, 135, 12)),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.red,
+          brightness: Brightness.light,
+          // overrides
+          primary: Colors.blue,
+          secondary: Colors.green
+        ),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Cocktail Menu'),
+      home: const OnboardingPage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  const MyHomePage({super.key});
+
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
   // how it looks.
@@ -48,9 +57,6 @@ class MyHomePage extends StatefulWidget {
   // case the title) provided by the parent (in this case the App widget) and
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
-
-  final String title;
-
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -83,7 +89,28 @@ class MenuWidget extends StatelessWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  String title = "Menu";
   int _counter = 0;
+
+  @override
+  void initState() {
+
+    if (!firebaseController.isInitialized) {
+      var account = signInController.currentUser;
+      firebaseController.initialize().then((_) async {
+        bool isAdminAWAIT = await firebaseController.isUserAdmin(account?.email);
+        BarSettings barSettingsAWAIT = await firebaseController.getBarSettings();
+
+        setState(() {
+          isAdmin = isAdminAWAIT;
+          barSettings = barSettingsAWAIT;
+          title = barSettings.title;
+        });
+      });
+    }
+
+    super.initState();
+  }
 
   void _incrementCounter() {
     setState(() {
@@ -105,14 +132,11 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
+      drawer: const SideBar(),
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        leading: SideBar.getCustomLeading(),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        title: Text(title),
       ),
       body: const Center(
         // Center is a layout widget. It takes a single child and positions it
