@@ -71,6 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
         BarSettings barSettingsAWAIT =
             await firebaseController.getBarSettings();
 
+
         setState(() {
           isAdmin = isAdminAWAIT;
           barSettings = barSettingsAWAIT;
