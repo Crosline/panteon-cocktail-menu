@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:panteon_cocktail_menu/widgets/product-card.dart';
+import 'package:panteon_cocktail_menu/widgets/product_card.dart';
 
 class MenuWidget extends StatelessWidget {
   const MenuWidget({super.key});
