@@ -40,14 +40,6 @@ class _BarSettingsWidgetState extends LoadingWidgetState<BarSettingsWidget> {
     return buildLoading(
       Column(
         children: [
-          const Text(
-            'Admin Settings',
-            style: TextStyle(
-              fontSize: 25,
-              color: Colors.white,
-            ),
-          ),
-          const SizedBox(height: 20),
           Form(
             key: _formKey,
             child: TextFormField(
