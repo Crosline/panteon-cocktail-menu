@@ -2,11 +2,11 @@ import 'dart:convert';
 
 class Cocktail {
   String name;
-  String? description;
-  bool? isEnabled;
-  String? recipe;
+  String description;
+  String recipe;
+  bool isEnabled;
 
-  Cocktail({required this.name, this.description, this.recipe, this.isEnabled});
+  Cocktail({required this.name, this.description = "description", this.recipe = "recipe", this.isEnabled = true});
 
 
   Map<String, dynamic> toJsonMap() {
