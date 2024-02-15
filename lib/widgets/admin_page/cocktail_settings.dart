@@ -75,6 +75,18 @@ class _CocktailSettingsWidgetState extends LoadingWidgetState<CocktailSettingsWi
                     ],
                   ),
                   const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: _selectedCocktail!.isEnabled,
+                        onChanged: (value) { setState(() {
+                          _selectedCocktail!.isEnabled = value!;
+                        }); },
+                      ),
+                      const Text("Is Cocktail Enabled")
+                    ],
+                  ),
+                  const SizedBox(height: 20),
                   TextFormField(
                     key: Key(_selectedCocktail!.description ?? ""),
                     initialValue: _selectedCocktail!.description,
@@ -88,14 +100,14 @@ class _CocktailSettingsWidgetState extends LoadingWidgetState<CocktailSettingsWi
                   ),
                   const SizedBox(height: 20),
                   TextFormField(
-                    key: Key(_selectedCocktail!.price ?? ""),
-                    initialValue: _selectedCocktail!.price,
+                    key: Key(_selectedCocktail!.recipe ?? ""),
+                    initialValue: _selectedCocktail!.recipe,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       hintText: 'acinin tatli tebessumu',
-                      labelText: "Price",
+                      labelText: "Recipe",
                     ),
-                    onChanged: (value) { _selectedCocktail!.price = value; },
+                    onChanged: (value) { _selectedCocktail!.recipe = value; },
                     validator: Validator.stringValidator,
                   ),
                   const SizedBox(height: 20),
@@ -142,7 +154,7 @@ class _CocktailSettingsWidgetState extends LoadingWidgetState<CocktailSettingsWi
     if (!_formKey.currentState!.validate()) return;
     if (_newCocktailName == null) return;
 
-    var newCocktail = Cocktail(name: _newCocktailName!, description: "description", price: "price");
+    var newCocktail = Cocktail(name: _newCocktailName!, description: "description", recipe: "recipe", isEnabled: true);
     _setCocktail(newCocktail);
   }
 
