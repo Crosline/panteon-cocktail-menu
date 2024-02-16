@@ -60,7 +60,7 @@ class _ProductCardState extends State<ProductCard> {
             const Spacer(),
             const Text("Lime, Tequila, Triple Sec"),
             Padding(
-              padding: EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+              padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
