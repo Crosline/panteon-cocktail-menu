@@ -15,14 +15,17 @@ class _MenuWidgetState extends State<MenuWidget> {
 
   @override
   void initState() {
-    firebaseController.getCocktailMap().then((value) => {
-          setState(() {
-            _products = value.entries
-                .map(
-                    (e) => ProductCard(cocktail: Cocktail.fromJsonMap(e.value)))
-                .toList();
-          })
+    firebaseController.getCocktailMap().then((value) {
+      var products = <ProductCard>[];
+
+      for (var cocktailMap in value.values) {
+        products.add(ProductCard(cocktail: Cocktail.fromJsonMap(cocktailMap)));
+      }
+
+        setState(() {
+          _products = products;
         });
+      });
     super.initState();
   }
 
@@ -37,9 +40,8 @@ class _MenuWidgetState extends State<MenuWidget> {
               padding: const EdgeInsets.all(20),
               crossAxisCount: 2,
               scrollDirection: Axis.vertical,
-              children: _products,
+              children: _products),
             ),
-          ),
         ],
       ),
     );

@@ -117,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             if (firebaseController.isInitialized)
-              const MenuWidget()
+              const Expanded(child: MenuWidget())
               else
               const Center(
                 child: CircularProgressIndicator(),
