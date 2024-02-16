@@ -97,7 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.primary,
         title: Text(title),
       ),
-      body: const Center(
+      body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Column(
@@ -116,7 +116,12 @@ class _MyHomePageState extends State<MyHomePage> {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Expanded(child: MenuWidget()),
+            if (firebaseController.isInitialized)
+              const MenuWidget()
+              else
+              const Center(
+                child: CircularProgressIndicator(),
+              ),
           ],
         ),
       ),
