@@ -19,7 +19,10 @@ class _MenuWidgetState extends State<MenuWidget> {
       var products = <ProductCard>[];
 
       for (var cocktailMap in value.values) {
-        products.add(ProductCard(cocktail: Cocktail.fromJsonMap(cocktailMap)));
+        var cocktail = Cocktail.fromJsonMap(cocktailMap);
+        if (!cocktail.isEnabled) continue;
+
+        products.add(ProductCard(cocktail: cocktail));
       }
 
         setState(() {
