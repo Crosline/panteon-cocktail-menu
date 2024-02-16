@@ -104,10 +104,22 @@ class _CocktailSettingsWidgetState extends LoadingWidgetState<CocktailSettingsWi
                     initialValue: _selectedCocktail!.recipe,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      hintText: 'acinin tatli tebessumu',
+                      hintText: '2 TANE SUNDAN 1 TANE BUNDAN',
                       labelText: "Recipe",
                     ),
                     onChanged: (value) { _selectedCocktail!.recipe = value; },
+                    validator: Validator.stringValidator,
+                  ),
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    key: Key(_selectedCocktail!.imageUrl),
+                    initialValue: _selectedCocktail!.imageUrl,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'assets/images/panteon.png',
+                      labelText: "Image Asset URL",
+                    ),
+                    onChanged: (value) { _selectedCocktail!.imageUrl = value; },
                     validator: Validator.stringValidator,
                   ),
                   const SizedBox(height: 20),

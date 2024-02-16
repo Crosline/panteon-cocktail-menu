@@ -10,7 +10,7 @@ class Cocktail {
   Cocktail(
       {required this.name,
       this.description = "description",
-      this.imageUrl = "assets/images/panteon.jpg",
+      this.imageUrl = "assets/images/panteon.png",
       this.recipe = "recipe",
       this.isEnabled = true});
 
