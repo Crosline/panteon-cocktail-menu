@@ -88,7 +88,7 @@ class _CocktailSettingsWidgetState extends LoadingWidgetState<CocktailSettingsWi
                   ),
                   const SizedBox(height: 20),
                   TextFormField(
-                    key: Key(_selectedCocktail!.description ?? ""),
+                    key: Key(_selectedCocktail!.description),
                     initialValue: _selectedCocktail!.description,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
@@ -100,7 +100,7 @@ class _CocktailSettingsWidgetState extends LoadingWidgetState<CocktailSettingsWi
                   ),
                   const SizedBox(height: 20),
                   TextFormField(
-                    key: Key(_selectedCocktail!.recipe ?? ""),
+                    key: Key(_selectedCocktail!.recipe),
                     initialValue: _selectedCocktail!.recipe,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
