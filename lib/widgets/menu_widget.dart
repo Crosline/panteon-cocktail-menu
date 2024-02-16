@@ -1,26 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:panteon_cocktail_menu/main.dart';
+import 'package:panteon_cocktail_menu/models/cocktail.dart';
 import 'package:panteon_cocktail_menu/widgets/product_card.dart';
 
-class MenuWidget extends StatelessWidget {
+class MenuWidget extends StatefulWidget {
   const MenuWidget({super.key});
+
+  @override
+  State<MenuWidget> createState() => _MenuWidgetState();
+}
+
+class _MenuWidgetState extends State<MenuWidget> {
+  List<ProductCard> _products = <ProductCard>[];
+
+  @override
+  void initState() {
+    firebaseController.getCocktailMap().then((value) => {
+          setState(() {
+            _products = value.entries
+                .map(
+                    (e) => ProductCard(cocktail: Cocktail.fromJsonMap(e.value)))
+                .toList();
+          })
+        });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Column(
         children: <Widget>[
-          Text('Menu', 
-          style: Theme.of(context).textTheme.headlineLarge),
+          Text('Menu', style: Theme.of(context).textTheme.headlineLarge),
           Expanded(
             child: GridView.count(
               padding: const EdgeInsets.all(20),
               crossAxisCount: 2,
               scrollDirection: Axis.vertical,
-              children: List.generate(5, (index) {
-                return ProductCard(
-                  title: 'Product $index',
-                  image: 'assets/images/panteon.png',
-                );
-              }),
+              children: _products,
             ),
           ),
         ],

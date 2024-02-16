@@ -4,10 +4,8 @@ import 'package:panteon_cocktail_menu/models/cocktail.dart';
 import 'package:panteon_cocktail_menu/models/order.dart';
 
 class ProductCard extends StatefulWidget {
-  const ProductCard({Key? key, required this.title, required this.image})
-      : super(key: key);
-  final String title;
-  final String image;
+  const ProductCard({Key? key, required this.cocktail}) : super(key: key);
+  final Cocktail cocktail;
 
   @override
   State<ProductCard> createState() => _ProductCardState();
@@ -15,20 +13,11 @@ class ProductCard extends StatefulWidget {
 
 class _ProductCardState extends State<ProductCard> {
   int _quantity = 1;
-  String _name = "";
-
-  @override
-  void initState() {
-    super.initState();
-
-    //fetch coctails
-  }
 
   void _setOrder() {
-    var order = Cocktail(name: _name);
     firebaseController.addNewOrder(Order(
         accountName: signInController.currentUser!.displayName!,
-        cocktails: <Cocktail, int>{order: _quantity},
+        cocktails: <Cocktail, int>{widget.cocktail: _quantity},
         orderTime: DateTime.now()));
   }
 
@@ -57,14 +46,14 @@ class _ProductCardState extends State<ProductCard> {
             Expanded(
                 flex: 30,
                 child: Image.asset(
-                  widget.image,
+                  widget.cocktail.imageUrl,
                   fit: BoxFit.contain,
                   height: 100,
                 )),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                widget.title,
+                widget.cocktail.name,
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ),

@@ -3,15 +3,21 @@ import 'dart:convert';
 class Cocktail {
   String name;
   String description;
+  String imageUrl;
   String recipe;
   bool isEnabled;
 
-  Cocktail({required this.name, this.description = "description", this.recipe = "recipe", this.isEnabled = true});
-
+  Cocktail(
+      {required this.name,
+      this.description = "description",
+      this.imageUrl = "assets/images/panteon.jpg",
+      this.recipe = "recipe",
+      this.isEnabled = true});
 
   Map<String, dynamic> toJsonMap() {
     return {
       "name": name,
+      "imageUrl": imageUrl,
       "description": description,
       "recipe": recipe,
       "isEnabled": isEnabled,
@@ -19,7 +25,12 @@ class Cocktail {
   }
 
   static Cocktail fromJsonMap(Map map) {
-    return Cocktail(name: map["name"], description: map["description"], recipe: map["recipe"], isEnabled: map["isEnabled"] );
+    return Cocktail(
+        name: map["name"],
+        description: map["description"],
+        imageUrl: map["imageUrl"],
+        recipe: map["recipe"],
+        isEnabled: map["isEnabled"]);
   }
 
   String toJson() {
@@ -30,5 +41,4 @@ class Cocktail {
     Map map = json.decode(encodedString);
     return fromJsonMap(map);
   }
-
 }
