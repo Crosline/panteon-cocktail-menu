@@ -20,6 +20,14 @@ class FirebaseController {
   late final DatabaseReference _ordersRef;
   late final DatabaseReference _cocktailDbRef;
 
+
+  final StreamController<List<Order>> _currentOrderStream =
+  StreamController<List<Order>>.broadcast();
+
+  Stream<List<Order>> get onOrderChanged {
+    return _currentOrderStream.stream;
+  }
+
   bool _isInitialized = false;
   bool get isInitialized {
     return _isInitialized;
@@ -144,8 +152,13 @@ class FirebaseController {
   }
 
   Future<List<Order>> getAllOrders() async {
-    List<Order> orders = <Order>[];
     final orderSnapshot = await _ordersRef.get();
+
+    return getAllOrdersFromSnapshot(orderSnapshot);
+  }
+
+  List<Order> getAllOrdersFromSnapshot(final DataSnapshot orderSnapshot)  {
+    List<Order> orders = <Order>[];
 
     if (orderSnapshot.value == null) return orders;
 
@@ -165,7 +178,10 @@ class FirebaseController {
 
     _database = FirebaseDatabase.instance;
     _adminsRef = _database.ref("cbo_admins");
+
     _ordersRef = _database.ref("cbo_orders");
+    _ordersRef.onChildChanged.listen(onOrdersRefChanged);
+
     _barSettingsRef = _database.ref("cbo_bar_settings");
     _cocktailDbRef = _database.ref("cbo_cocktails");
 
@@ -174,5 +190,15 @@ class FirebaseController {
     }
 
     _isInitialized = true;
+  }
+
+  void onOrdersRefChanged(DatabaseEvent event) {
+    final orderSnapshot = event.snapshot;
+
+    var orderList = getAllOrdersFromSnapshot(orderSnapshot);
+
+    if (_currentOrderStream.hasListener) {
+      _currentOrderStream.add(orderList);
+    }
   }
 }
