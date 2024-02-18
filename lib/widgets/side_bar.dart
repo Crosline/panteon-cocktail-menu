@@ -4,6 +4,8 @@ import 'package:panteon_cocktail_menu/main.dart';
 import 'package:panteon_cocktail_menu/pages/admin_page.dart';
 import 'package:panteon_cocktail_menu/pages/onboarding_page.dart';
 
+import '../pages/order_page.dart';
+
 class SideBar extends StatelessWidget {
   static const EdgeInsets allPadding = EdgeInsets.all(20);
 
@@ -46,6 +48,11 @@ class SideBar extends StatelessWidget {
               ListTile(
                 title: const Text("Admin"),
                 onTap: () => NavigationController.push(context, const AdminPage()),
+              ),
+            if(isAdmin)
+              ListTile(
+                title: const Text("Orders"),
+                onTap: () => NavigationController.push(context, const OrderPage()),
               ),
             const Divider(),
             ListTile(

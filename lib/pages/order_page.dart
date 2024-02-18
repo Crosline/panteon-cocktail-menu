@@ -1,43 +1,87 @@
 import 'package:flutter/material.dart';
-import 'package:panteon_cocktail_menu/widgets/menu_widget.dart';
-import 'package:panteon_cocktail_menu/widgets/side_bar.dart';
+import 'package:panteon_cocktail_menu/main.dart';
+import 'package:panteon_cocktail_menu/models/order.dart';
+import 'package:panteon_cocktail_menu/widgets/loading_widget.dart';
+import 'package:panteon_cocktail_menu/widgets/sized_divider.dart';
 
-class OrderPage extends StatelessWidget {
+import '../controllers/navigation_controller.dart';
+
+class OrderPage extends StatefulWidget {
   const OrderPage({super.key});
+
+  static Builder getOrderLeading() => Builder(
+      builder: (BuildContext context) {
+        return IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => NavigationController.pop(context),
+        );
+      }
+  );
+
+  @override
+  State<OrderPage> createState() => _OrderPageState();
+}
+
+class _OrderPageState extends LoadingWidgetState<OrderPage> {
+  List<Widget> _orders = <Widget>[];
+
+  @override
+  void initState() {
+    firebaseController.getAllOrders().then(turnOrdersToWidgets);
+    firebaseController.onOrderChanged.listen(turnOrdersToWidgets);
+
+    super.initState();
+  }
+
+
+  void turnOrdersToWidgets(List<Order> orders) {
+    isLoading = false;
+    List<Widget> widgets = <Widget>[];
+    for (int i = 0; i < orders.length; i++) {
+      for (var cocktailPair in orders[i].cocktails!.entries) {
+        widgets.add(
+            Card(
+              child: Column(
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(cocktailPair.key.name),
+                      Text("${cocktailPair.value}"),
+                    ],
+                  ),
+                  Text(cocktailPair.key.recipe)
+                ],
+              ),
+            )
+        );
+      }
+      widgets.add(const SizedDivider());
+    }
+    setState(() {
+      _orders = widgets;
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
-   return Scaffold(
-      drawer: const SideBar(),
-      appBar: AppBar(
-        leading: SideBar.getCustomLeading(),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        title:const Text("Menu"),
-      ),
-      body: const Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Expanded(child: MenuWidget()),
-          ],
-        ),
-      ),
-    );
+    return buildLoading(Form(
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text("Orders"),
+            leading: OrderPage.getOrderLeading(),
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Center(
+              child: ListView(
+                children: _orders,
+              ),
+            ),
+          ),
+        )
+    ));
   }
-
 }
