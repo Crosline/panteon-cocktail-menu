@@ -10,7 +10,7 @@ class MyOrdersWidget extends StatefulWidget {
 }
 
 class _MyOrdersWidgetState extends State<MyOrdersWidget> {
-  List<Order> orders = []; // Replace this with your actual data fetching logic
+  List<String> orders = []; // Replace this with your actual data fetching logic
 
   @override
   void initState() {
@@ -19,26 +19,29 @@ class _MyOrdersWidgetState extends State<MyOrdersWidget> {
   }
 
   void fetchOrders() {
-    firebaseController.getAllOrders().then((value) {
-      setState(() {
-        orders = value
-            .where((element) =>
-                element.accountName ==
-                signInController.currentUser!.displayName)
-            .toList();
-      });
-    });
+    // firebaseController.getAllOrders().then((value) {
+    //   setState(() {
+    //     orders = value
+    //         .where((element) =>
+    //             element.accountName ==
+    //             signInController.currentUser!.displayName)
+    //         .toList();
+    //   });
+    // });
+
+    orders = ["Order 1", "Order 2", "Order 3"];
   }
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
+    return Expanded(
+        child: ListView.builder(
       itemCount: orders.length,
       itemBuilder: (context, index) {
         return ListTile(
-          title: Text(orders[index].status),
+          title: Text(orders[index]),
         );
       },
-    );
+    ));
   }
 }
