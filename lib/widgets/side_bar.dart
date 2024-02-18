@@ -9,14 +9,13 @@ import '../pages/order_page.dart';
 class SideBar extends StatelessWidget {
   static const EdgeInsets allPadding = EdgeInsets.all(20);
 
-  static Builder getCustomLeading() => Builder(
-        builder: (BuildContext context) {
-          return IconButton(
-            icon: const Icon(Icons.account_circle_rounded),
-            onPressed: () => Scaffold.of(context).openDrawer(), //() => SideBar.Open(context),
-          );
-        }
-    );
+  static Builder getCustomLeading() => Builder(builder: (BuildContext context) {
+        return IconButton(
+          icon: const Icon(Icons.account_circle_rounded),
+          onPressed: () =>
+              Scaffold.of(context).openDrawer(), //() => SideBar.Open(context),
+        );
+      });
 
   const SideBar({super.key});
 
@@ -32,7 +31,9 @@ class SideBar extends StatelessWidget {
               child: Column(
                 children: [
                   CircleAvatar(
-                    foregroundImage: Image.network(signInController.currentUser!.photoUrl!).image,
+                    foregroundImage:
+                        Image.network(signInController.currentUser!.photoUrl!)
+                            .image,
                   ),
                   const SizedBox(height: 20),
                   Text(signInController.currentUser!.displayName!),
@@ -40,19 +41,17 @@ class SideBar extends StatelessWidget {
                 ],
               ),
             ),
-            ListTile(
-              title: const Text("Cart"),
-              onTap: () { },
-            ),
-            if(isAdmin)
+            if (isAdmin)
               ListTile(
                 title: const Text("Admin"),
-                onTap: () => NavigationController.push(context, const AdminPage()),
+                onTap: () =>
+                    NavigationController.push(context, const AdminPage()),
               ),
-            if(isAdmin)
+            if (isAdmin)
               ListTile(
                 title: const Text("Orders"),
-                onTap: () => NavigationController.push(context, const OrderPage()),
+                onTap: () =>
+                    NavigationController.push(context, const OrderPage()),
               ),
             const Divider(),
             ListTile(

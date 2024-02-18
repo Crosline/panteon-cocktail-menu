@@ -9,10 +9,9 @@ import '../models/order.dart';
 import '../options/firebase_options.dart';
 
 class FirebaseController {
-
   static const useDatabaseEmulator = false;
   static const emulatorPort = 9000;
-  final emulatorHost ='localhost';
+  final emulatorHost = 'localhost';
 
   late final FirebaseDatabase _database;
   late final DatabaseReference _adminsRef;
@@ -20,9 +19,8 @@ class FirebaseController {
   late final DatabaseReference _ordersRef;
   late final DatabaseReference _cocktailDbRef;
 
-
   final StreamController<List<Order>> _currentOrderStream =
-  StreamController<List<Order>>.broadcast();
+      StreamController<List<Order>>.broadcast();
 
   Stream<List<Order>> get onOrderChanged {
     return _currentOrderStream.stream;
@@ -68,13 +66,12 @@ class FirebaseController {
     if (!_isInitialized) return;
     if (email == null) return;
 
-     var adminList = await _getAdminList();
+    var adminList = await _getAdminList();
     if (adminList.contains(email)) return;
 
     adminList.add(email);
 
-    await _adminsRef
-        .set(adminList);
+    await _adminsRef.set(adminList);
   }
 
   Future<void> removeAdminUser(String? email) async {
@@ -86,8 +83,7 @@ class FirebaseController {
 
     adminList.remove(email);
 
-    await _adminsRef
-        .set(adminList);
+    await _adminsRef.set(adminList);
   }
 
   Future<BarSettings> getBarSettings() async {
@@ -107,8 +103,7 @@ class FirebaseController {
   }
 
   Future<void> setBarSettings(BarSettings barSettings) async {
-    await _barSettingsRef
-        .set(barSettings.toJson());
+    await _barSettingsRef.set(barSettings.toJson());
   }
 
   Future<void> setCocktail(Cocktail cocktail) async {
@@ -116,8 +111,7 @@ class FirebaseController {
 
     cocktailMap[cocktail.name] = cocktail.toJsonMap();
 
-    await _cocktailDbRef
-        .set(cocktailMap);
+    await _cocktailDbRef.set(cocktailMap);
   }
 
   Future<void> removeCocktail(Cocktail cocktail) async {
@@ -127,13 +121,11 @@ class FirebaseController {
       cocktailMap.remove(cocktail.name);
     }
 
-    await _cocktailDbRef
-        .set(cocktailMap);
+    await _cocktailDbRef.set(cocktailMap);
   }
 
   Future<Map<String, dynamic>> getCocktailMap() async {
-    var cocktailDbSnapshot = await _cocktailDbRef
-        .get();
+    var cocktailDbSnapshot = await _cocktailDbRef.get();
 
     Map<String, dynamic> cocktailMap;
     if (cocktailDbSnapshot.value == null) {
@@ -146,9 +138,7 @@ class FirebaseController {
   }
 
   Future<void> addNewOrder(Order order) async {
-    await _ordersRef
-        .push()
-        .set(order.toJson());
+    await _ordersRef.push().set(order.toJson());
   }
 
   Future<List<Order>> getAllOrders() async {
@@ -157,7 +147,7 @@ class FirebaseController {
     return getAllOrdersFromSnapshot(orderSnapshot);
   }
 
-  List<Order> getAllOrdersFromSnapshot(final DataSnapshot orderSnapshot)  {
+  List<Order> getAllOrdersFromSnapshot(final DataSnapshot orderSnapshot) {
     List<Order> orders = <Order>[];
 
     if (orderSnapshot.value == null) return orders;

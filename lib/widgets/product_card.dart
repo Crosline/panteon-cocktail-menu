@@ -15,10 +15,15 @@ class _ProductCardState extends State<ProductCard> {
   int _quantity = 1;
 
   void _setOrder() {
-    firebaseController.addNewOrder(Order(
-        accountName: signInController.currentUser!.displayName!,
-        cocktails: <Cocktail, int>{widget.cocktail: _quantity},
-        orderTime: DateTime.now()));
+    firebaseController
+        .addNewOrder(Order(
+            accountName: signInController.currentUser!.displayName!,
+            cocktails: <Cocktail, int>{widget.cocktail: _quantity},
+            orderTime: DateTime.now()))
+        .then((value) => {
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(const SnackBar(content: Text('Order placed')))
+            });
   }
 
   void _increment() {
