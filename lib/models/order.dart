@@ -3,20 +3,26 @@ import 'cocktail.dart';
 class Order {
   late Map<Cocktail, int>? cocktails;
   late DateTime? orderTime;
+  String status = "pending";
   String accountName;
 
-
-  Order({required this.accountName, this.orderTime, this.cocktails});
+  Order(
+      {required this.accountName,
+      this.orderTime,
+      this.cocktails,
+      this.status = "pending"});
 
   Map<String, dynamic> toJson() {
     return {
       "cocktails": _serializeCocktailMap(cocktails),
       "orderTime": orderTime!.millisecondsSinceEpoch,
-      "account": accountName
+      "account": accountName,
+      "status": status
     };
   }
 
-  static Map<dynamic, dynamic> _serializeCocktailMap(Map<Cocktail, int>? cocktails) {
+  static Map<dynamic, dynamic> _serializeCocktailMap(
+      Map<Cocktail, int>? cocktails) {
     Map<dynamic, dynamic> cocktailMap = <dynamic, dynamic>{};
     if (cocktails == null) return cocktailMap;
 
@@ -27,7 +33,8 @@ class Order {
     return cocktailMap;
   }
 
-  static Map<Cocktail, int> _deserializeCocktailMap(Map<dynamic, dynamic>? cocktails) {
+  static Map<Cocktail, int> _deserializeCocktailMap(
+      Map<dynamic, dynamic>? cocktails) {
     Map<Cocktail, int> cocktailMap = <Cocktail, int>{};
     if (cocktails == null) return cocktailMap;
 
@@ -40,10 +47,10 @@ class Order {
 
   static Order fromJson(Map<String, dynamic> map) {
     var order = Order(
-      accountName: map["account"],
-      orderTime: DateTime.fromMillisecondsSinceEpoch(map["orderTime"]),
-      cocktails: _deserializeCocktailMap(map["cocktails"])
-    );
+        accountName: map["account"],
+        status: map["status"],
+        orderTime: DateTime.fromMillisecondsSinceEpoch(map["orderTime"]),
+        cocktails: _deserializeCocktailMap(map["cocktails"]));
 
     return order;
   }
