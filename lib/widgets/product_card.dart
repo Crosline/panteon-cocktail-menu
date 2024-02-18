@@ -59,22 +59,38 @@ class _ProductCardState extends State<ProductCard> {
             ),
             const Spacer(),
             Text(widget.cocktail.description),
+            const Spacer(
+              flex: 2,
+            ),
             Padding(
-              padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
+              padding:
+                  const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Row(children: <Widget>[
-                    IconButton.outlined(
-                      onPressed: _decrement,
-                      icon: const Icon(Icons.remove),
-                    ),
-                    Text(_quantity.toString()),
-                    IconButton.outlined(
-                      onPressed: _increment,
-                      icon: const Icon(Icons.add),
-                    ),
-                  ]),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        IconButton.outlined(
+                          iconSize: 10,
+                          constraints: const BoxConstraints(),
+                          onPressed: _decrement,
+                          icon: const Icon(Icons.remove),
+                        ),
+                        SizedBox.fromSize(
+                            size: const Size(30, 30),
+                            child: Center(
+                                child: Text(
+                              '$_quantity',
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ))),
+                        IconButton.outlined(
+                          iconSize: 10,
+                          constraints: const BoxConstraints(),
+                          onPressed: _increment,
+                          icon: const Icon(Icons.add),
+                        ),
+                      ]),
                   ElevatedButton(
                     style: Theme.of(context).elevatedButtonTheme.style,
                     onPressed: _setOrder,
