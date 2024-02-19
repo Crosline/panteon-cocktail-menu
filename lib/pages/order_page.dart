@@ -38,25 +38,24 @@ class _OrderPageState extends LoadingWidgetState<OrderPage> {
     isLoading = false;
     List<Widget> widgets = <Widget>[];
     for (int i = 0; i < orders.length; i++) {
-      for (var cocktailPair in orders[i].cocktails!.entries) {
-        widgets.add(
-            Card(
-              child: Column(
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(cocktailPair.key.name),
-                      Text("${cocktailPair.value}"),
-                    ],
-                  ),
-                  Text(cocktailPair.key.recipe)
-                ],
-              ),
-            )
-        );
-      }
+      widgets.add(
+          Card(
+            child: Column(
+              children: [
+                Text(orders[i].accountName),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(orders[i].cocktail.name),
+                    Text("${orders[i].amount}"),
+                  ],
+                ),
+                Text(orders[i].cocktail.recipe)
+              ],
+            ),
+          )
+      );
       widgets.add(const SizedDivider());
     }
     setState(() {

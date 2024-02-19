@@ -32,13 +32,4 @@ class Cocktail {
         recipe: map["recipe"],
         isEnabled: map["isEnabled"]);
   }
-
-  String toJson() {
-    return json.encode(toJsonMap());
-  }
-
-  static Cocktail fromJson(String encodedString) {
-    Map map = json.decode(encodedString);
-    return fromJsonMap(map);
-  }
 }

@@ -17,9 +17,10 @@ class _ProductCardState extends State<ProductCard> {
   void _setOrder() {
     firebaseController
         .addNewOrder(Order(
-            accountName: signInController.currentUser!.displayName!,
-            cocktails: <Cocktail, int>{widget.cocktail: _quantity},
-            orderTime: DateTime.now()))
+          accountName: signInController.currentUser!.displayName!,
+          orderTime: DateTime.now(),
+          cocktail: widget.cocktail,
+          amount: _quantity))
         .then((value) => {
               ScaffoldMessenger.of(context)
                   .showSnackBar(const SnackBar(content: Text('Order placed')))
