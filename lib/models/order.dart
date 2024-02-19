@@ -2,7 +2,7 @@ import 'cocktail.dart';
 
 class Order {
   Cocktail cocktail;
-  late DateTime? orderTime;
+  DateTime orderTime;
   String status = "pending";
   String accountName;
   int amount;
@@ -34,5 +34,12 @@ class Order {
         cocktail: Cocktail.fromJsonMap(map["cocktail"]));
 
     return order;
+  }
+
+  bool equals(Order other) {
+    return other.accountName == accountName
+        && other.cocktail.name == cocktail.name
+        && other.amount == amount
+        && (other.orderTime.millisecondsSinceEpoch - orderTime.millisecondsSinceEpoch) < 1000;
   }
 }

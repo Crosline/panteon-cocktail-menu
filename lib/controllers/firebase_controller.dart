@@ -141,6 +141,20 @@ class FirebaseController {
     await _ordersRef.push().set(order.toJson());
   }
 
+  Future<void> updateOrderStatus(Order order, String status) async {
+    final orderSnapshot = await _ordersRef.get();
+
+    for (var dataSnapshot in orderSnapshot.children) {
+      Map<String, dynamic> orderInstance = dataSnapshot.value as Map<String, dynamic>;
+      var currentOrder = Order.fromJson(orderInstance);
+      if (currentOrder.equals(order)) {
+        order.status = status;
+        dataSnapshot.ref.set(order.toJson());
+        break;
+      }
+    }
+  }
+
   Future<List<Order>> getAllOrders() async {
     final orderSnapshot = await _ordersRef.get();
 
@@ -171,6 +185,8 @@ class FirebaseController {
 
     _ordersRef = _database.ref("cbo_orders");
     _ordersRef.onChildChanged.listen(onOrdersRefChanged);
+    _ordersRef.onChildAdded.listen(onOrdersRefChanged);
+    _ordersRef.onChildRemoved.listen(onOrdersRefChanged);
 
     _barSettingsRef = _database.ref("cbo_bar_settings");
     _cocktailDbRef = _database.ref("cbo_cocktails");
@@ -182,13 +198,10 @@ class FirebaseController {
     _isInitialized = true;
   }
 
-  void onOrdersRefChanged(DatabaseEvent event) {
-    final orderSnapshot = event.snapshot;
-
-    var orderList = getAllOrdersFromSnapshot(orderSnapshot);
-
-    if (_currentOrderStream.hasListener) {
-      _currentOrderStream.add(orderList);
-    }
+  void onOrdersRefChanged(DatabaseEvent _) {
+    getAllOrders().then((orderList) => {
+      if (_currentOrderStream.hasListener)
+          _currentOrderStream.add(orderList)
+    });
   }
 }

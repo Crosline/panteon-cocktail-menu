@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:panteon_cocktail_menu/main.dart';
 import 'package:panteon_cocktail_menu/models/order.dart';
@@ -40,19 +41,42 @@ class _OrderPageState extends LoadingWidgetState<OrderPage> {
     for (int i = 0; i < orders.length; i++) {
       widgets.add(
           Card(
-            child: Column(
-              children: [
-                Text(orders[i].accountName),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(orders[i].cocktail.name),
-                    Text("${orders[i].amount}"),
-                  ],
-                ),
-                Text(orders[i].cocktail.recipe)
-              ],
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(orders[i].accountName),
+                      Text(orders[i].status),
+                      const SizedBox(height: 40),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text("${orders[i].amount}x"),
+                          const SizedBox(width: 30),
+                          Text(orders[i].cocktail.name),
+                        ],
+                      ),
+                      Text(orders[i].cocktail.recipe)
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      ElevatedButton(onPressed: () => { firebaseController.updateOrderStatus(orders[i], "in progress") }, child: const Text("Take Order")),
+                      const SizedBox(height: 10),
+                      ElevatedButton(onPressed: () => { firebaseController.updateOrderStatus(orders[i], "done") }, child: const Text("Done")),
+                      const SizedBox(height: 10),
+                      ElevatedButton(onPressed: () => { firebaseController.updateOrderStatus(orders[i], "pending") }, child: const Text("Cancel")),
+                      const SizedBox(height: 20),
+                      ElevatedButton(onPressed: () => { firebaseController.updateOrderStatus(orders[i], "pending") }, child: const Text("Delete")),
+                    ],
+                  ),
+                ],
+              ),
             ),
           )
       );
@@ -74,10 +98,8 @@ class _OrderPageState extends LoadingWidgetState<OrderPage> {
           ),
           body: Padding(
             padding: const EdgeInsets.all(20.0),
-            child: Center(
-              child: ListView(
-                children: _orders,
-              ),
+            child: ListView(
+              children: _orders,
             ),
           ),
         )
