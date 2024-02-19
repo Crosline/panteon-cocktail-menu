@@ -142,17 +142,34 @@ class FirebaseController {
   }
 
   Future<void> updateOrderStatus(Order order, String status) async {
+    var orderSnapshot = await _getOrderSnapshot(order);
+
+    if (orderSnapshot == null) return;
+
+    order.status = status;
+    await orderSnapshot.ref.set(order.toJson());
+  }
+
+  Future<void> removeOrder(Order order) async {
+    var orderSnapshot = await _getOrderSnapshot(order);
+
+    if (orderSnapshot == null) return;
+
+    await orderSnapshot.ref.remove();
+  }
+
+  Future<DataSnapshot?> _getOrderSnapshot(Order order) async {
     final orderSnapshot = await _ordersRef.get();
 
     for (var dataSnapshot in orderSnapshot.children) {
       Map<String, dynamic> orderInstance = dataSnapshot.value as Map<String, dynamic>;
       var currentOrder = Order.fromJson(orderInstance);
       if (currentOrder.equals(order)) {
-        order.status = status;
-        dataSnapshot.ref.set(order.toJson());
-        break;
+        return dataSnapshot;
       }
     }
+
+    return null;
   }
 
   Future<List<Order>> getAllOrders() async {

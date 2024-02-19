@@ -71,7 +71,7 @@ class _OrderPageState extends LoadingWidgetState<OrderPage> {
                       const SizedBox(height: 10),
                       ElevatedButton(onPressed: () => { firebaseController.updateOrderStatus(orders[i], "pending") }, child: const Text("Cancel")),
                       const SizedBox(height: 20),
-                      ElevatedButton(onPressed: () => { firebaseController.updateOrderStatus(orders[i], "pending") }, child: const Text("Delete")),
+                      ElevatedButton(onPressed: () => { firebaseController.removeOrder(orders[i]) }, child: const Text("Delete")),
                     ],
                   ),
                 ],
