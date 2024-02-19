@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:panteon_cocktail_menu/main.dart';
-import 'package:panteon_cocktail_menu/models/order.dart';
 
 class MyOrdersWidget extends StatefulWidget {
   const MyOrdersWidget({super.key});

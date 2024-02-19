@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class Cocktail {
   String name;
   String description;

@@ -18,7 +18,7 @@ class Order {
   Map<String, dynamic> toJson() {
     return {
       "cocktail" : cocktail.toJsonMap(),
-      "orderTime": orderTime!.millisecondsSinceEpoch,
+      "orderTime": orderTime.millisecondsSinceEpoch,
       "account": accountName,
       "amount": amount,
       "status": status
