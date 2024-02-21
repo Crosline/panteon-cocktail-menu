@@ -47,65 +47,78 @@ class _ProductCardState extends State<ProductCard> {
         shape: RoundedRectangleBorder(
             borderRadius: const BorderRadius.all(Radius.circular(8)),
             side: BorderSide(color: Theme.of(context).colorScheme.outline)),
-        child: Column(
-          children: <Widget>[
-            Expanded(
-                flex: 30,
-                child: Image.asset(
-                  widget.cocktail.imageUrl,
-                  fit: BoxFit.contain,
-                  height: 100,
-                )),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                widget.cocktail.name,
-                style: Theme.of(context).textTheme.titleLarge,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 8.0, bottom: 5.0),
+          child: Column(
+            children: <Widget>[
+              Image.asset(
+                widget.cocktail.imageUrl,
+                fit: BoxFit.contain,
+                height: 100,
               ),
-            ),
-            const Spacer(),
-            Text(widget.cocktail.description),
-            const Spacer(
-              flex: 2,
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        IconButton.outlined(
-                          iconSize: 10,
-                          constraints: const BoxConstraints(),
-                          onPressed: _decrement,
-                          icon: const Icon(Icons.remove),
-                        ),
-                        SizedBox.fromSize(
-                            size: const Size(30, 30),
-                            child: Center(
-                                child: Text(
-                              '$_quantity',
-                              style: Theme.of(context).textTheme.titleLarge,
-                            ))),
-                        IconButton.outlined(
-                          iconSize: 10,
-                          constraints: const BoxConstraints(),
-                          onPressed: _increment,
-                          icon: const Icon(Icons.add),
-                        ),
-                      ]),
-                  ElevatedButton(
-                    style: Theme.of(context).elevatedButtonTheme.style,
-                    onPressed: _setOrder,
-                    child: const Text('Order'),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 5.0),
+                child: FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: Text(
+                    widget.cocktail.name,
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
-                ],
+                ),
               ),
-            )
-          ],
+              const Spacer(),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5.0),
+                child: FittedBox(
+                  fit: BoxFit.fitHeight,
+                  child: Text(widget.cocktail.description)
+                ),
+              ),
+              const Spacer(
+                flex: 2,
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 5.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          IconButton.outlined(
+                            iconSize: 10,
+                            constraints: const BoxConstraints(),
+                            onPressed: _decrement,
+                            icon: const Icon(Icons.remove),
+                          ),
+                          SizedBox.fromSize(
+                              size: const Size(30, 30),
+                              child: Center(
+                                  child: Text(
+                                '$_quantity',
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ))),
+                          IconButton.outlined(
+                            iconSize: 10,
+                            constraints: const BoxConstraints(),
+                            onPressed: _increment,
+                            icon: const Icon(Icons.add),
+                          ),
+                        ]),
+                    SizedBox(
+                      width: 150,
+                      child: ElevatedButton(
+                        style: Theme.of(context).elevatedButtonTheme.style,
+                        onPressed: _setOrder,
+                        child: const Text('Order'),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
         ));
   }
 }

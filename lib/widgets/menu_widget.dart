@@ -41,6 +41,7 @@ class _MenuWidgetState extends State<MenuWidget> {
           Expanded(
             child: GridView.count(
               padding: const EdgeInsets.all(20),
+              childAspectRatio: 0.6,
               crossAxisCount: 2,
               scrollDirection: Axis.vertical,
               children: _products),
