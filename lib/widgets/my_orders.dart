@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:panteon_cocktail_menu/main.dart';
+import 'package:panteon_cocktail_menu/models/order.dart';
 
 class MyOrdersWidget extends StatefulWidget {
   const MyOrdersWidget({super.key});
@@ -8,26 +10,33 @@ class MyOrdersWidget extends StatefulWidget {
 }
 
 class _MyOrdersWidgetState extends State<MyOrdersWidget> {
-  List<String> orders = []; // Replace this with your actual data fetching logic
+  List<Order> orders = []; // Replace this with your actual data fetching logic
 
   @override
   void initState() {
     super.initState();
+    firebaseController.onOrderChanged.listen((event) {
+      setState(() {
+        orders = event
+            .where((element) =>
+                element.accountName ==
+                signInController.currentUser!.displayName)
+            .toList();
+      });
+    });
     fetchOrders(); // Fetch orders when the widget is initialized
   }
 
   void fetchOrders() {
-    // firebaseController.getAllOrders().then((value) {
-    //   setState(() {
-    //     orders = value
-    //         .where((element) =>
-    //             element.accountName ==
-    //             signInController.currentUser!.displayName)
-    //         .toList();
-    //   });
-    // });
-
-    orders = ["Order 1", "Order 2", "Order 3"];
+    firebaseController.getAllOrders().then((value) {
+      setState(() {
+        orders = value
+            .where((element) =>
+                element.accountName ==
+                signInController.currentUser!.displayName)
+            .toList();
+      });
+    });
   }
 
   @override
@@ -37,7 +46,7 @@ class _MyOrdersWidgetState extends State<MyOrdersWidget> {
       itemCount: orders.length,
       itemBuilder: (context, index) {
         return ListTile(
-          title: Text(orders[index]),
+          title: Text(orders[index].status),
         );
       },
     ));
