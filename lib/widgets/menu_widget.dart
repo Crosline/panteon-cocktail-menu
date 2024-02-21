@@ -34,6 +34,8 @@ class _MenuWidgetState extends State<MenuWidget> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+
     return Center(
       child: Column(
         children: <Widget>[
@@ -42,7 +44,7 @@ class _MenuWidgetState extends State<MenuWidget> {
             child: GridView.count(
               padding: const EdgeInsets.all(20),
               childAspectRatio: 0.6,
-              crossAxisCount: 2,
+              crossAxisCount:  width > 600 ? width > 900 ? width > 1200 ? width > 1600 ? 8 : 6 : 4 : 3 : 2,
               scrollDirection: Axis.vertical,
               children: _products),
             ),
