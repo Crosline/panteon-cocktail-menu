@@ -42,13 +42,17 @@ class _MyOrdersWidgetState extends State<MyOrdersWidget> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-        child: ListView.builder(
-      itemCount: orders.length,
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: Text(orders[index].status),
-        );
-      },
-    ));
+      child: Center(
+          child: Column(children: [
+        const Text("My Orders"),
+        ListView.builder(
+            itemCount: orders.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(orders[index].status),
+              );
+            }),
+      ])),
+    );
   }
 }
