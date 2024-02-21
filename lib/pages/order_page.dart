@@ -44,14 +44,14 @@ class _OrderPageState extends LoadingWidgetState<OrderPage> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(orders[i].accountName),
                       Text(orders[i].status),
-                      const SizedBox(height: 40),
+                      const SizedBox(height: 20),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -61,18 +61,28 @@ class _OrderPageState extends LoadingWidgetState<OrderPage> {
                           Text(orders[i].cocktail.name),
                         ],
                       ),
-                      Text(orders[i].cocktail.recipe)
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        width: 200,
+                        child: Row(
+                          children: [
+                            Flexible(
+                                child: Text(orders[i].cocktail.recipe)
+                            ),
+                          ],
+                        ),
+                      )
                     ],
                   ),
                   Column(
                     children: [
-                      ElevatedButton(onPressed: () => { firebaseController.updateOrderStatus(orders[i], "in progress") }, child: const Text("Take Order")),
+                      SizedBox(width: 125, child: ElevatedButton(onPressed: () => { firebaseController.updateOrderStatus(orders[i], "in progress") }, child: const Text("Take Order"))),
                       const SizedBox(height: 10),
-                      ElevatedButton(onPressed: () => { firebaseController.updateOrderStatus(orders[i], "done") }, child: const Text("Done")),
+                      SizedBox(width: 125, child: ElevatedButton(onPressed: () => { firebaseController.updateOrderStatus(orders[i], "done") }, child: const Text("Done"))),
                       const SizedBox(height: 10),
-                      ElevatedButton(onPressed: () => { firebaseController.updateOrderStatus(orders[i], "pending") }, child: const Text("Cancel")),
+                      SizedBox(width: 125, child: ElevatedButton(onPressed: () => { firebaseController.updateOrderStatus(orders[i], "pending") }, child: const Text("Cancel"))),
                       const SizedBox(height: 20),
-                      ElevatedButton(onPressed: () => { firebaseController.removeOrder(orders[i]) }, child: const Text("Delete")),
+                      SizedBox(width: 125, child: ElevatedButton(onPressed: () => { firebaseController.removeOrder(orders[i]) }, child: const Text("Delete"))),
                     ],
                   ),
                 ],
