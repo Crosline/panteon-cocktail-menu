@@ -1,9 +1,15 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart' hide Order;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
+import 'package:panteon_cocktail_menu/main.dart';
 import 'package:panteon_cocktail_menu/models/bar_settings.dart';
 import 'package:panteon_cocktail_menu/models/cocktail.dart';
+import 'package:http/http.dart' as http;
 
 import '../models/order.dart';
 import '../options/firebase_options.dart';
@@ -212,6 +218,8 @@ class FirebaseController {
       _database.useDatabaseEmulator(emulatorHost, emulatorPort);
     }
 
+    _initializeMessaging();
+
     _isInitialized = true;
   }
 
@@ -220,5 +228,90 @@ class FirebaseController {
       if (_currentOrderStream.hasListener)
           _currentOrderStream.add(orderList)
     });
+  }
+
+  void _initializeMessaging() async {
+    var firebaseMessaging = FirebaseMessaging.instance;
+
+    NotificationSettings settings = await firebaseMessaging.requestPermission(
+      alert: true,
+      announcement: false,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus != AuthorizationStatus.authorized) {
+      return;
+    }
+
+    await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+      alert: false,
+      badge: false,
+      sound: true,
+    );
+    print("trying get apnsToken");
+    final apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+    if (apnsToken != null) {
+      // APNS token is available, make FCM plugin API requests...
+      print("apnsToken: $apnsToken");
+    }
+    print("trying get token");
+    var token = await _getNotificationToken();
+    if (token != null) {
+      _saveNotificationToken(token);
+      print("token: $token");
+    }
+  }
+
+
+  Future<String?> _getNotificationToken() async {
+    var token = FirebaseMessaging.instance.getToken(vapidKey: "BBQYc2aA4luFXTQz95UIjjpprXOfyM_uBQUFbTJx6kP6KdcSaBmzQFyy55wKS7dnyKXb6SoHtKAttBNvahQ5r6Y");
+    return token;
+  }
+
+  void _saveNotificationToken(String token) async {
+    await FirebaseFirestore.instance.collection("UserTokens").doc(signInController.currentUser!.displayName).set({
+      'token' : token,
+    });
+  }
+
+  void sendPushMessageTo(String usernameToSend, String body, String title) async {
+    var snap = await FirebaseFirestore.instance.collection("UserTokens").doc(usernameToSend).get();
+    String token = snap['token'];
+
+    try {
+      var s = http.post(
+        (Uri.parse('https://fcm.googleapis.com/fcm/send')),
+        headers: <String, String> {
+          'Content-Type': 'application/json',
+          'Authorization': 'key=AIzaSyBU_R9wMkv1JkKHmH2wwHQ75dEIfZvdq6Y'
+        },
+        body: jsonEncode(
+          <String, dynamic> {
+            'notification': <String, dynamic>{
+              'body': body,
+              'title': title,
+            },
+            'priority': 'high',
+            'data': <String, dynamic>{
+              'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+              'id': '1',
+              'status': 'done'
+            },
+            "to": token,
+          }
+        )
+      );
+    }
+    catch (e) {
+      // Something went wrong
+      if (kDebugMode) {
+        print("ERROR SENDING PUSH NOTIFICATION "
+            "\nUSER: $usernameToSend "
+            "\nBODY: $body\nTITLE: $title");
+      }
+    }
   }
 }
