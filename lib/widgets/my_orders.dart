@@ -31,9 +31,6 @@ class _MyOrdersWidgetState extends State<MyOrdersWidget> {
     });
   }
 
-  void fetchOrders() {
-  }
-
   @override
   Widget build(BuildContext context) {
     return Expanded(

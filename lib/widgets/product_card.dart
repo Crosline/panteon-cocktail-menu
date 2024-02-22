@@ -44,82 +44,82 @@ class _ProductCardState extends State<ProductCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
-        shape: RoundedRectangleBorder(
-            borderRadius: const BorderRadius.all(Radius.circular(8)),
-            side: BorderSide(color: Theme.of(context).colorScheme.outline)),
-        child: Padding(
-          padding: const EdgeInsets.only(top: 8.0, bottom: 5.0, left: 5.0, right: 5.0),
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                flex: 12,
-                child: Image.asset(
-                  widget.cocktail.imageUrl,
-                  fit: BoxFit.contain,
-                  height: 100,
+      shape: RoundedRectangleBorder(
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+          side: BorderSide(color: Theme.of(context).colorScheme.outline)),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 8.0, bottom: 5.0, left: 5.0, right: 5.0),
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              flex: 12,
+              child: Image.asset(
+                widget.cocktail.imageUrl,
+                fit: BoxFit.contain,
+                height: 100,
+              ),
+            ),
+            const Spacer(),
+            Expanded(
+              flex: 2,
+              child: FittedBox(
+                fit: BoxFit.contain,
+                child: Text(
+                  widget.cocktail.name,
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
-              const Spacer(),
-              Expanded(
-                flex: 2,
-                child: FittedBox(
-                  fit: BoxFit.contain,
-                  child: Text(
-                    widget.cocktail.name,
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: FittedBox(
-                  fit: BoxFit.contain,
-                  child: Text(widget.cocktail.description)
-                )
-              ),
-              const Spacer(),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        IconButton.outlined(
-                          iconSize: 10,
-                          constraints: const BoxConstraints(),
-                          onPressed: _decrement,
-                          icon: const Icon(Icons.remove),
-                        ),
-                        SizedBox.fromSize(
-                            size: const Size(30, 30),
-                            child: Center(
-                                child: Text(
-                              '$_quantity',
-                              style: Theme.of(context).textTheme.titleLarge,
-                            ))),
-                        IconButton.outlined(
-                          iconSize: 10,
-                          constraints: const BoxConstraints(),
-                          onPressed: _increment,
-                          icon: const Icon(Icons.add),
-                        ),
-                      ]),
-                  const SizedBox(height: 5),
-                  SizedBox(
-                    width: 150,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Theme.of(context).colorScheme.secondary,
-                        backgroundColor: Theme.of(context).colorScheme.primary
-                      ),
-                      onPressed: _setOrder,
-                      child: const Text('Order'),
-                    ),
-                  ),
-                ],
+            ),
+            Expanded(
+              flex: 1,
+              child: FittedBox(
+                fit: BoxFit.contain,
+                child: Text(widget.cocktail.description)
               )
-            ],
-          ),
-        ));
+            ),
+            const Spacer(),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      IconButton.outlined(
+                        iconSize: 10,
+                        constraints: const BoxConstraints(),
+                        onPressed: _decrement,
+                        icon: const Icon(Icons.remove),
+                      ),
+                      SizedBox.fromSize(
+                          size: const Size(30, 30),
+                          child: Center(
+                              child: Text(
+                            '$_quantity',
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ))),
+                      IconButton.outlined(
+                        iconSize: 10,
+                        constraints: const BoxConstraints(),
+                        onPressed: _increment,
+                        icon: const Icon(Icons.add),
+                      ),
+                    ]),
+                const SizedBox(height: 5),
+                SizedBox(
+                  width: 150,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Theme.of(context).colorScheme.secondary,
+                      backgroundColor: Theme.of(context).colorScheme.primary
+                    ),
+                    onPressed: _setOrder,
+                    child: const Text('Order'),
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
+      ));
   }
 }
