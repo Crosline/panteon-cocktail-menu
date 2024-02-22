@@ -10,33 +10,28 @@ class MyOrdersWidget extends StatefulWidget {
 }
 
 class _MyOrdersWidgetState extends State<MyOrdersWidget> {
-  List<Order> orders = []; // Replace this with your actual data fetching logic
+  List<Order> _orders = []; // Replace this with your actual data fetching logic
 
   @override
   void initState() {
     super.initState();
-    firebaseController.onOrderChanged.listen((event) {
-      setState(() {
-        orders = event
-            .where((element) =>
-                element.accountName ==
-                signInController.currentUser!.displayName)
-            .toList();
-      });
+
+    firebaseController.onOrderChanged.listen((value) => fillAllOrders(value));
+
+    // Fetch orders when the widget is initialized
+    firebaseController.getAllOrders().then((value) => fillAllOrders(value));
+  }
+
+  void fillAllOrders(List<Order> orderList) {
+    setState(() {
+      _orders = orderList
+          .where((element) =>
+      element.accountName == signInController.currentUser!.displayName)
+          .toList();
     });
-    fetchOrders(); // Fetch orders when the widget is initialized
   }
 
   void fetchOrders() {
-    firebaseController.getAllOrders().then((value) {
-      setState(() {
-        orders = value
-            .where((element) =>
-                element.accountName ==
-                signInController.currentUser!.displayName)
-            .toList();
-      });
-    });
   }
 
   @override
@@ -46,10 +41,10 @@ class _MyOrdersWidgetState extends State<MyOrdersWidget> {
           child: Column(children: [
         const Text("My Orders"),
         ListView.builder(
-            itemCount: orders.length,
+            itemCount: _orders.length,
             itemBuilder: (context, index) {
               return ListTile(
-                title: Text(orders[index].status),
+                title: Text(_orders[index].status),
               );
             }),
       ])),
