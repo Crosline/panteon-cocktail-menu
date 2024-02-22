@@ -44,7 +44,8 @@ class _MyOrdersWidgetState extends State<MyOrdersWidget> {
             itemCount: _orders.length,
             itemBuilder: (context, index) {
               return ListTile(
-                title: Text(_orders[index].status),
+                title: Text("${_orders[index].cocktail.name} x${_orders[index].amount}"),
+                subtitle: Text(_orders[index].status),
               );
             }),
       ])),
