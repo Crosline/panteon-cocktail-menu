@@ -34,8 +34,10 @@ class _MyAppState extends State<MyApp> {
       title: 'Panteon Cocktail',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromARGB(255, 138, 77, 244),
-            brightness: Brightness.dark),
+          seedColor: const Color.fromARGB(255, 138, 77, 244),
+          brightness: Brightness.dark,
+          secondary: Colors.black,
+        ),
         useMaterial3: true,
       ),
       home: const OnboardingPage(),
@@ -95,6 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         leading: SideBar.getCustomLeading(),
         backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Theme.of(context).colorScheme.secondary,
         title: Text(title),
       ),
       body: Center(

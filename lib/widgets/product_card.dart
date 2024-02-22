@@ -104,10 +104,14 @@ class _ProductCardState extends State<ProductCard> {
                           icon: const Icon(Icons.add),
                         ),
                       ]),
+                  const SizedBox(height: 5),
                   SizedBox(
                     width: 150,
                     child: ElevatedButton(
-                      style: Theme.of(context).filledButtonTheme.style,
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Theme.of(context).colorScheme.secondary,
+                        backgroundColor: Theme.of(context).colorScheme.primary
+                      ),
                       onPressed: _setOrder,
                       child: const Text('Order'),
                     ),
