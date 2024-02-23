@@ -30,7 +30,7 @@ class _MyOrdersWidgetState extends State<MyOrdersWidget> {
           .where((element) => element.status != 'Completed')
           .toList();
 
-      list.sort((a, b) => b.orderTime.compareTo(a.orderTime));
+      list.sort((a, b) => a.orderTime.compareTo(b.orderTime));
       _orders = list.take(6).toList();
     });
   }
