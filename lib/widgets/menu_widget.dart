@@ -25,10 +25,10 @@ class _MenuWidgetState extends State<MenuWidget> {
         products.add(ProductCard(cocktail: cocktail));
       }
 
-        setState(() {
-          _products = products;
-        });
+      setState(() {
+        _products = products;
       });
+    });
     super.initState();
   }
 
@@ -36,20 +36,26 @@ class _MenuWidgetState extends State<MenuWidget> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
 
-    return Center(
-      child: Column(
-        children: <Widget>[
-          Text('Menu', style: Theme.of(context).textTheme.headlineLarge),
-          Expanded(
-            child: GridView.count(
+    return Column(
+      children: <Widget>[
+        Text('Menu', style: Theme.of(context).textTheme.headlineLarge),
+        Expanded(
+          child: GridView.count(
               padding: const EdgeInsets.all(20),
               childAspectRatio: 0.6,
-              crossAxisCount:  width > 600 ? width > 900 ? width > 1200 ? width > 1600 ? 8 : 6 : 4 : 3 : 2,
+              crossAxisCount: width > 600
+                  ? width > 900
+                      ? width > 1200
+                          ? width > 1600
+                              ? 8
+                              : 6
+                          : 4
+                      : 3
+                  : 2,
               scrollDirection: Axis.vertical,
               children: _products),
-            ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

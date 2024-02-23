@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:panteon_cocktail_menu/models/bar_settings.dart';
 import 'package:panteon_cocktail_menu/pages/onboarding_page.dart';
 import 'package:panteon_cocktail_menu/widgets/menu_widget.dart';
+import 'package:panteon_cocktail_menu/widgets/my_orders.dart';
 
 import 'controllers/firebase_controller.dart';
 import 'controllers/sign_in_controller.dart';
@@ -119,9 +120,10 @@ class _MyHomePageState extends State<MyHomePage> {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            if (firebaseController.isInitialized)
+            if (firebaseController.isInitialized) ...[
+              const MyOrdersWidget(),
               const Expanded(child: MenuWidget())
-              else
+            ] else
               const Center(
                 child: CircularProgressIndicator(),
               ),
