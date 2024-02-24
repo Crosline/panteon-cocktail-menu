@@ -18,6 +18,7 @@ class FirebaseController {
   late final DatabaseReference _barSettingsRef;
   late final DatabaseReference _ordersRef;
   late final DatabaseReference _cocktailDbRef;
+  late final DatabaseReference _historyRef;
 
   final StreamController<List<Order>> _currentOrderStream =
       StreamController<List<Order>>.broadcast();
@@ -156,13 +157,16 @@ class FirebaseController {
     if (orderSnapshot == null) return;
 
     await orderSnapshot.ref.remove();
+
+    _historyRef.push().set(orderSnapshot.value);
   }
 
   Future<DataSnapshot?> _getOrderSnapshot(Order order) async {
     final orderSnapshot = await _ordersRef.get();
 
     for (var dataSnapshot in orderSnapshot.children) {
-      Map<String, dynamic> orderInstance = dataSnapshot.value as Map<String, dynamic>;
+      Map<String, dynamic> orderInstance =
+          dataSnapshot.value as Map<String, dynamic>;
       var currentOrder = Order.fromJson(orderInstance);
       if (currentOrder.equals(order)) {
         return dataSnapshot;
@@ -208,6 +212,8 @@ class FirebaseController {
     _barSettingsRef = _database.ref("cbo_bar_settings");
     _cocktailDbRef = _database.ref("cbo_cocktails");
 
+    _historyRef = _database.ref("cbo_history");
+
     if (useDatabaseEmulator) {
       _database.useDatabaseEmulator(emulatorHost, emulatorPort);
     }
@@ -217,8 +223,8 @@ class FirebaseController {
 
   void onOrdersRefChanged(DatabaseEvent _) {
     getAllOrders().then((orderList) => {
-      if (_currentOrderStream.hasListener)
-          _currentOrderStream.add(orderList)
-    });
+          if (_currentOrderStream.hasListener)
+            _currentOrderStream.add(orderList)
+        });
   }
 }
